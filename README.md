@@ -14,6 +14,8 @@ Le calculateur gratuit pour les vendeurs en ligne en Tunisie qui travaillent en 
 ![Langues](https://img.shields.io/badge/FR_·_EN_·_عربي-0f1f3d?style=flat-square)
 ![Vie privée](https://img.shields.io/badge/tes_chiffres_restent_chez_toi-5f6b80?style=flat-square)
 
+[![Instagram @assistant.tn](https://img.shields.io/badge/Instagram-@assistant.tn-E1306C?style=flat-square&logo=instagram&logoColor=white)](https://www.instagram.com/assistant.tn/)
+
 <br>
 
 <img src="screenshots/1-resultat.png" width="250" alt="Résultat: bénéfice net, marge, pub par commande livrée">&nbsp;&nbsp;
@@ -133,7 +135,7 @@ Repères utilisés pour les couleurs (indicatifs, à adapter à ton produit):
 
 <details>
 <summary><b>C'est vraiment gratuit?</b></summary>
-Oui. Pas de compte, pas d'abonnement, pas de publicité.
+Oui. Pas de compte, pas d'abonnement, pas de publicité. Des questions? Écris-nous sur [Instagram @assistant.tn](https://www.instagram.com/assistant.tn/).
 </details>
 
 <details>

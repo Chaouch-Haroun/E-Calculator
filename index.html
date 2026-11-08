@@ -527,7 +527,7 @@ header::after, #verdict::after { background-image: linear-gradient(118deg, rgb(2
         <small data-t="cNote"></small>
       </section>
 
-      <footer data-t="footer"></footer>
+      <footer><span data-t="footer"></span> <a id="igFoot" href="https://www.instagram.com/assistant.tn/" target="_blank" rel="noopener" style="color:var(--blue);font-weight:600;white-space:nowrap">Instagram @assistant.tn</a></footer>
     </div>
   </div>
 </div>
@@ -537,7 +537,7 @@ header::after, #verdict::after { background-image: linear-gradient(118deg, rgb(2
 "use strict";
 // ---------------- configuration: Haroun's contact links
 const CONFIG = {
-  whatsapp: "", instagram: "",   // whatsapp: international number without + (e.g. 21612345678); instagram: profile or community link
+  whatsapp: "", instagram: "https://www.instagram.com/assistant.tn/",   // whatsapp: international number without + (e.g. 21612345678); instagram: profile or community link
   // Google Form that receives the welcome screen (name, shop, phone). action = .../formResponse, fields = entry ids
   form: { action: "https://docs.google.com/forms/d/e/1FAIpQLSe4QV0skJ393BAAa7JGg0MfZ8p3B6WiDyGhw4WGjSdVoQdFvA/formResponse", name: "entry.1096705120", shop: "entry.1560605021", phone: "entry.1405503144" },
 };
@@ -583,6 +583,8 @@ fr: {
   aAdsGood: (c, m) => `Pub efficace: ${c} par livrée, bien sous ta limite de ${m}. Tu peux augmenter le budget doucement (20 à 30 % tous les 2 ou 3 jours).`,
   aWht: (x) => `La retenue de 3 % te coûte ${x} sur cette période. Avec un matricule fiscal, la société de livraison ne la prend plus.`,
   aMin: (p, m) => `Ton prix (${p}) est sous le prix minimum (${m}) pour ces chiffres.`,
+  cTextIg: "Envoie ton résultat en message privé sur Instagram: on regarde et on te dit où tu perds de l'argent. C'est gratuit.",
+  cNoteIg: "Copie le résumé, ouvre Instagram et colle-le en message privé. Tes chiffres restent sur ton téléphone.",
   cTitle: "Tu veux un avis sur tes chiffres?", cText: "Envoie ton résultat sur WhatsApp: je regarde et je te dis où tu perds de l'argent. Gratuit, je réponds moi-même.",
   cName: "Ton prénom (pour que je sache qui écrit)", cPh: "Ex: Amira", waBtn: "Envoyer mes chiffres sur WhatsApp", igBtn: "Rejoindre la communauté Instagram",
   copy: "Copier le résumé", copied: "Résumé copié", copyFail: "Copie impossible ici",
@@ -664,7 +666,7 @@ mHelp: "Tu bloques ou tu veux savoir ce que l'IA peut faire pour ta boutique? É
   pCopy: (n) => `${n} (copie)`, pDelQ: (n) => `Supprimer « ${n} » ?`, pHist: "Versions précédentes", pRestore: "Restaurer", pNoHist: "Aucune version pour l'instant.",
   pImported: (n) => `${n} produit(s) importé(s).`, pBadFile: "Fichier non reconnu.",
   sServer: (h) => `Enregistré sur ton ordinateur · ${h}`, sSaving: "Enregistrement…", sPending: "Enregistré dans le navigateur. Copie sur l'ordinateur dès que le programme répond.", sLocal: "Enregistré sur cet appareil",
-  sum: (who, r) => [`Salem Haroun${who ? ", c'est " + who : ""}. Voici mes chiffres du calculateur:`,
+  sum: (who, r) => [`Salem${who ? ", c'est " + who : ""}. Voici mes chiffres du calculateur:`,
     `Prix ${r.price} · coût ${r.cost} · emballage ${r.pack}`, `${r.leads} commandes · ${r.conf} confirmées · ${r.deliv} livrées`,
     `Livraison ${r.ship}${r.clientPays ? " (payée par le client)" : ""} · retour ${r.ret}`, `Pub ${r.ads} · retenue 3 % ${r.wht ? "oui" : "non"}`,
     `Résultat: ${r.profit} (${r.per} par livrée)`, `Tu peux me dire où je perds de l'argent?`],
@@ -708,6 +710,8 @@ en: {
   aAdsGood: (c, m) => `Efficient ads: ${c} per delivered order, well under your limit of ${m}. You can raise the budget slowly (20 to 30 % every 2 or 3 days).`,
   aWht: (x) => `The 3 % withholding costs you ${x} this period. With a tax ID, the courier no longer takes it.`,
   aMin: (p, m) => `Your price (${p}) is below the minimum price (${m}) for these numbers.`,
+  cTextIg: "Send your result as a private message on Instagram: we'll look at it and tell you where you lose money. It's free.",
+  cNoteIg: "Copy the summary, open Instagram and paste it as a private message. Your numbers stay on your phone.",
   cTitle: "Want a second look at your numbers?", cText: "Send your result on WhatsApp: I check it and tell you where you lose money. Free, and I answer myself.",
   cName: "Your first name (so I know who is writing)", cPh: "E.g. Amira", waBtn: "Send my numbers on WhatsApp", igBtn: "Join the Instagram community",
   copy: "Copy the summary", copied: "Summary copied", copyFail: "Copying isn't possible here",
@@ -789,7 +793,7 @@ mHelp: "Stuck, or want to know what AI can do for your shop? Message me.", mHelp
   pCopy: (n) => `${n} (copy)`, pDelQ: (n) => `Delete "${n}"?`, pHist: "Previous versions", pRestore: "Restore", pNoHist: "No versions yet.",
   pImported: (n) => `${n} product(s) imported.`, pBadFile: "File not recognised.",
   sServer: (h) => `Saved on your computer · ${h}`, sSaving: "Saving…", sPending: "Saved in the browser. Copied to your computer as soon as the program responds.", sLocal: "Saved on this device",
-  sum: (who, r) => [`Hi Haroun${who ? ", it's " + who : ""}. Here are my numbers from the calculator:`,
+  sum: (who, r) => [`Hi${who ? ", it's " + who : ""}. Here are my numbers from the calculator:`,
     `Price ${r.price} · cost ${r.cost} · packaging ${r.pack}`, `${r.leads} orders · ${r.conf} confirmed · ${r.deliv} delivered`,
     `Delivery ${r.ship}${r.clientPays ? " (paid by the customer)" : ""} · return ${r.ret}`, `Ads ${r.ads} · 3 % withholding ${r.wht ? "yes" : "no"}`,
     `Result: ${r.profit} (${r.per} per delivered order)`, `Can you tell me where I'm losing money?`],
@@ -833,6 +837,8 @@ ar: {
   aAdsGood: (c, m) => `إشهار فعّال: ${c} لكل مُسلَّمة، أقل بكثير من حدّك ${m}. يمكنك زيادة الميزانية تدريجياً (20 إلى 30% كل 2 أو 3 أيام).`,
   aWht: (x) => `خصم 3% يكلّفك ${x} في هذه الفترة. مع معرّف جبائي، لا تأخذه شركة التوصيل.`,
   aMin: (p, m) => `سعرك (${p}) أقل من أدنى سعر (${m}) بهذه الأرقام.`,
+  cTextIg: "أرسل نتيجتك في رسالة خاصة على إنستغرام: نراجعها ونقول لك أين تخسر المال. مجاناً.",
+  cNoteIg: "انسخ الملخص، افتح إنستغرام والصقه في رسالة خاصة. أرقامك تبقى على هاتفك.",
   cTitle: "تحب رأيي في أرقامك؟", cText: "أرسل نتيجتك على واتساب: أراجعها وأقول لك أين تخسر المال. مجاناً، وأردّ عليك بنفسي.",
   cName: "اسمك (لأعرف من يكتب)", cPh: "مثال: أميرة", waBtn: "أرسل أرقامي على واتساب", igBtn: "انضم إلى مجتمع إنستغرام",
   copy: "نسخ الملخص", copied: "تم النسخ", copyFail: "النسخ غير ممكن هنا",
@@ -914,7 +920,7 @@ mHelp: "واجهتك مشكلة أو تريد أن تعرف ماذا يمكن أ
   pCopy: (n) => `${n} (نسخة)`, pDelQ: (n) => `حذف «${n}»؟`, pHist: "النسخ السابقة", pRestore: "استرجاع", pNoHist: "لا توجد نسخ بعد.",
   pImported: (n) => `تم استيراد ${n} منتج.`, pBadFile: "ملف غير معروف.",
   sServer: (h) => `محفوظ على حاسوبك · ${h}`, sSaving: "جارٍ الحفظ…", sPending: "محفوظ في المتصفح. يُنسخ إلى حاسوبك عندما يستجيب البرنامج.", sLocal: "محفوظ على هذا الجهاز",
-  sum: (who, r) => [`سلام هارون${who ? "، أنا " + who : ""}. هذه أرقامي من الحاسبة:`,
+  sum: (who, r) => [`سلام${who ? "، أنا " + who : ""}. هذه أرقامي من الحاسبة:`,
     `السعر ${r.price} · التكلفة ${r.cost} · التغليف ${r.pack}`, `${r.leads} طلبية · ${r.conf} مؤكّدة · ${r.deliv} مُسلَّمة`,
     `التوصيل ${r.ship}${r.clientPays ? " (يدفعه الحريف)" : ""} · الإرجاع ${r.ret}`, `الإشهار ${r.ads} · خصم 3% ${r.wht ? "نعم" : "لا"}`,
     `النتيجة: ${r.profit} (${r.per} لكل مُسلَّمة)`, `ممكن تقول لي أين أخسر المال؟`],
@@ -1328,8 +1334,12 @@ function summary(r) {
 function updateContact(r) {
   $("contact").hidden = !CONFIG.whatsapp && !CONFIG.instagram;   // shown once a number or link is set in CONFIG
   const text = encodeURIComponent(summary(r));
-  $("waBtn").href = CONFIG.whatsapp ? `https://wa.me/${CONFIG.whatsapp}?text=${text}` : `https://wa.me/?text=${text}`;
+  $("waBtn").hidden = !CONFIG.whatsapp; if (CONFIG.whatsapp) $("waBtn").href = `https://wa.me/${CONFIG.whatsapp}?text=${text}`;
   if (CONFIG.instagram) { $("igBtn").href = CONFIG.instagram; $("igBtn").hidden = false; } else $("igBtn").hidden = true;
+  $("igBtn").className = "btn " + (CONFIG.whatsapp ? "ghost" : "primary");   // Instagram only: send the summary by private message
+  const igOnly = !CONFIG.whatsapp;
+  document.querySelector("#contact > p").textContent = t(igOnly ? "cTextIg" : "cText");
+  document.querySelector("#contact > small").textContent = t(igOnly ? "cNoteIg" : "cNote");
 }
 $("who").addEventListener("input", () => updateContact(compute(S)));
 $("copyLink").onclick = async () => {
