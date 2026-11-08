@@ -1,0 +1,1233 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Calcule ton vrai bénéfice en e-commerce (paiement à la livraison): marge, pub, retours, suivi jour par jour et rapport.">
+<meta name="theme-color" content="#1d4ed8">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Rbe7">
+<style>:root{color-scheme:light dark}body{margin:0}[hidden]{display:none!important}</style>
+<title>Calculateur Rbe7</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap">
+<style>
+/* Layout: phone-first ledger. Verdict on top, inputs as a parcel slip, then charts and advice; two columns from 960px. */
+:root {
+  --bg: #ffffff; --paper: #ffffff; --ink: #0f1f3d; --muted: #5f6b80; --line: #dde5f2; --soft: #f2f6fc;
+  --blue: #1d4ed8; --blue-deep: #16337a; --on-blue: #ffffff; --cost: #9db7ec;
+  --accent: #86e0a8; --accent-ink: #0b3d24;
+  --good: #15803d; --good-soft: #e3f4ea; --warn: #b45309; --warn-soft: #fbf1df; --bad: #c2303a; --bad-soft: #fbe6e7;
+  --display: "Bricolage Grotesque", "IBM Plex Sans Arabic", "Arial Black", system-ui, sans-serif;
+  --body: "Instrument Sans", "IBM Plex Sans Arabic", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0b1426; --paper: #111d35; --ink: #eef3fb; --muted: #9aa8c0; --line: #22324f; --soft: #16243f;
+  --blue: #6b9bff; --blue-deep: #1d3f8f; --on-blue: #ffffff; --cost: #3f63ad;
+  --accent: #8be8b0; --accent-ink: #06301b;
+  --good: #4ade80; --good-soft: #12301f; --warn: #f0b35a; --warn-soft: #2f2414; --bad: #f2737a; --bad-soft: #3a1b20; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0b1426; --paper: #111d35; --ink: #eef3fb; --muted: #9aa8c0; --line: #22324f; --soft: #16243f;
+  --blue: #6b9bff; --blue-deep: #1d3f8f; --on-blue: #ffffff; --cost: #3f63ad;
+  --accent: #8be8b0; --accent-ink: #06301b;
+  --good: #4ade80; --good-soft: #12301f; --warn: #f0b35a; --warn-soft: #2f2414; --bad: #f2737a; --bad-soft: #3a1b20; color-scheme: dark }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.5 var(--body); }
+.wrap { max-width: 1160px; margin: 0 auto; padding-block: 20px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 16px; }
+header .brand { font: 600 12px var(--mono); letter-spacing: 2px; text-transform: uppercase; color: var(--blue); }
+h1 { font: 800 clamp(30px, 7vw, 48px)/1.02 var(--display); margin: 6px 0 8px; letter-spacing: -1px; text-wrap: balance; }
+.lead { color: var(--muted); margin: 0; max-width: 60ch; }
+h2 { font: 800 19px var(--display); margin: 0 0 4px; letter-spacing: -0.2px; }
+.hint { color: var(--muted); font-size: 13px; margin: 0 0 12px; }
+.card { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 18px; min-width: 0; }
+.cols { display: grid; gap: 16px; grid-template-columns: 1fr; }
+@media (min-width: 960px) { .cols { grid-template-columns: 420px 1fr; align-items: start; } .sticky { position: sticky; top: calc(16px + env(safe-area-inset-top, 0px)); } }
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+/* verdict */
+#verdict { border-width: 2px; }
+#verdict.good { border-color: var(--good); } #verdict.warn { border-color: var(--warn); } #verdict.bad { border-color: var(--bad); }
+.vtop { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.pill { font: 600 12px var(--mono); padding: 4px 10px; border-radius: 99px; letter-spacing: .5px; text-transform: uppercase; }
+.pill.good { background: var(--good-soft); color: var(--good); } .pill.warn { background: var(--warn-soft); color: var(--warn); } .pill.bad { background: var(--bad-soft); color: var(--bad); }
+#vProfit { font: 800 clamp(38px, 10vw, 60px)/1 var(--display); letter-spacing: -1.5px; margin: 10px 0 4px; }
+#vLine { margin: 0; font-size: 16px; }
+.kpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 14px; }
+@media (min-width: 640px) { .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.kpi { background: var(--soft); border-radius: 10px; padding: 10px 12px; border-left: 4px solid var(--line); }
+.kpi.good { border-left-color: var(--good); } .kpi.warn { border-left-color: var(--warn); } .kpi.bad { border-left-color: var(--bad); }
+.kpi small { display: block; color: var(--muted); font-size: 12px; }
+.kpi b { display: block; font: 600 18px var(--mono); font-variant-numeric: tabular-nums; }
+.kpi span { font-size: 12px; color: var(--muted); }
+/* inputs: a parcel slip */
+.slip { border: 1.5px dashed var(--line); border-radius: 14px; padding: 14px; display: grid; gap: 10px; }
+.slip + .slip { margin-top: 12px; }
+.slip legend, .sliphead { font: 600 11px var(--mono); letter-spacing: 1.6px; text-transform: uppercase; color: var(--blue); }
+.field { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: center; }
+.field label { font-weight: 500; }
+.field .sub { grid-column: 1 / -1; color: var(--muted); font-size: 12px; margin-top: -2px; }
+.inbox { display: flex; align-items: center; background: var(--soft); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.inbox input { width: 92px; border: 0; background: transparent; color: var(--ink); font: 600 16px var(--mono); padding: 9px 4px 9px 10px; text-align: right; font-variant-numeric: tabular-nums; }
+.inbox em { font: 12px var(--mono); color: var(--muted); font-style: normal; padding-right: 10px; }
+.field input[type=range] { grid-column: 1 / -1; width: 100%; accent-color: var(--blue); }
+.toggle { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.toggle input { width: 22px; height: 22px; accent-color: var(--blue); }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.seg button { border: 0; background: transparent; color: var(--ink); font: 600 13px var(--mono); padding: 8px 12px; cursor: pointer; min-height: 38px; }
+.seg button.on { background: var(--blue); color: var(--on-blue); }
+button.btn, a.btn, label.btn { font: 600 15px var(--body); border-radius: 12px; padding: 12px 16px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; min-height: 46px; }
+a.btn.primary, button.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.example { font: 12px var(--mono); color: var(--muted); }
+/* charts */
+.chart { width: 100%; height: auto; display: block; }
+.charthead { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.chart text { font-family: var(--mono); font-size: 12px; fill: var(--muted); }
+.chart .lbl { fill: var(--ink); font-weight: 600; }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -2px; margin-inline-end: 6px; }
+.grid2 { display: grid; gap: 16px; grid-template-columns: 1fr; }
+@media (min-width: 720px) { .grid2 { grid-template-columns: 1fr 1fr; } }
+/* advice + limits */
+.limits { display: grid; gap: 8px; grid-template-columns: 1fr; }
+@media (min-width: 560px) { .limits { grid-template-columns: repeat(3, 1fr); } }
+.limit { background: var(--soft); border-radius: 10px; padding: 12px; }
+.limit small { color: var(--muted); display: block; font-size: 12px; }
+.limit b { font: 800 22px var(--display); }
+#advice { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+#advice li { padding: 10px 12px; border-radius: 10px; background: var(--soft); border-left: 4px solid var(--line); }
+#advice li.good { border-left-color: var(--good); } #advice li.warn { border-left-color: var(--warn); } #advice li.bad { border-left-color: var(--bad); }
+/* contact */
+#contact { background: var(--blue-deep); color: var(--on-blue); border: 0; }
+#contact h2 { color: var(--on-blue); }
+#contact p { color: color-mix(in srgb, var(--on-blue) 75%, transparent); margin: 0 0 12px; max-width: 58ch; }
+#contact input { width: 100%; max-width: 360px; border-radius: 10px; border: 1px solid color-mix(in srgb, var(--on-blue) 30%, transparent); background: transparent; color: var(--on-blue); font: 16px var(--body); padding: 11px 12px; }
+#contact .row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+#contact a.btn.ghost, #contact button.btn.ghost { background: transparent; color: var(--on-blue); border-color: color-mix(in srgb, var(--on-blue) 35%, transparent); }
+#contact small { display: block; margin-top: 10px; color: color-mix(in srgb, var(--on-blue) 60%, transparent); }
+footer { color: var(--muted); font-size: 12px; }
+#bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--blue-deep); color: var(--on-blue);
+  padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+#bar b { font: 800 20px var(--display); white-space: nowrap; }
+#bar span { font: 12px var(--mono); opacity: .8; }
+#bar a { color: var(--on-blue); font: 600 13px var(--body); border: 1px solid color-mix(in srgb, var(--on-blue) 40%, transparent); border-radius: 10px; padding: 8px 12px; text-decoration: none; }
+#bar .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+@media (min-width: 960px) { #bar { display: none; } }
+@media (max-width: 959px) { .wrap { padding-bottom: 96px; } }
+@media (prefers-reduced-motion: no-preference) { .bar-anim { transition: all .25s ease; } }
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.lang button { font-family: var(--body); }
+[dir="rtl"] .inbox input { text-align: left; }
+[dir="rtl"] .kpi, [dir="rtl"] #advice li { border-left: 0; border-right: 4px solid var(--line); }
+[dir="rtl"] .kpi.good, [dir="rtl"] #advice li.good { border-right-color: var(--good); }
+[dir="rtl"] .kpi.warn, [dir="rtl"] #advice li.warn { border-right-color: var(--warn); }
+[dir="rtl"] .kpi.bad, [dir="rtl"] #advice li.bad { border-right-color: var(--bad); }
+[dir="rtl"] h1, [dir="rtl"] h2 { letter-spacing: 0; }
+.chart { direction: ltr; }
+.topbar { justify-content: flex-end; }
+#installBtn { min-height: 38px; padding: 6px 12px; font-size: 13px; }
+.jday { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 6px 0 10px; }
+.jday input { min-height: 44px; border: 1px solid var(--line); border-radius: 10px; background: var(--soft); color: var(--ink); font: 600 15px var(--mono); padding: 6px 10px; }
+.jgrid { display: grid; gap: 10px; grid-template-columns: 1fr; }
+@media (min-width: 640px) { .jgrid { grid-template-columns: 1fr 1fr; } }
+.jres { display: grid; gap: 8px; grid-template-columns: 1fr; margin: 14px 0; }
+@media (min-width: 640px) { .jres { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.jstat { background: var(--soft); border-radius: 12px; padding: 12px; }
+.jstat small { display: block; color: var(--muted); font-size: 12px; }
+.jstat b { display: block; font: 800 26px var(--display); font-variant-numeric: tabular-nums; }
+.jstat span { font-size: 12px; color: var(--muted); }
+.jstat b.good, .up { color: var(--good); } .jstat b.bad, .down { color: var(--bad); }
+.jbtns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.jbtns .btn { min-height: 44px; font-size: 14px; padding: 8px 12px; }
+#jChart .hit { fill: transparent; cursor: pointer; }
+.ios-hint { background: var(--soft); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 13px; display: flex; gap: 10px; align-items: center; justify-content: space-between; }
+.ios-hint button { border: 0; background: transparent; color: var(--muted); font-size: 18px; cursor: pointer; }
+[dir="rtl"] .jstat b { direction: ltr; unicode-bidi: isolate; text-align: right; }
+.projbar { display: flex; gap: 8px; align-items: center; margin: 14px 0 6px; }
+.projbar select, .projpanel input { flex: 1; min-width: 0; min-height: 44px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); color: var(--ink); font: 600 15px var(--body); padding: 8px 12px; }
+.projbar .btn, .projpanel .btn { min-height: 44px; padding: 8px 12px; font-size: 14px; }
+.projpanel { border: 1px dashed var(--line); border-radius: 14px; padding: 12px; margin: 6px 0; display: grid; gap: 10px; }
+.projpanel[hidden] { display: none; }
+.projpanel label { font-size: 13px; color: var(--muted); }
+.projpanel .row { display: flex; flex-wrap: wrap; gap: 8px; }
+.projpanel .btn.danger { color: var(--bad); }
+.projpanel ul { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; max-height: 260px; overflow: auto; }
+.projpanel li { display: flex; justify-content: space-between; align-items: center; gap: 8px; font: 13px var(--mono); border-bottom: 1px solid var(--line); padding: 4px 0; }
+.projpanel li button { font: 600 13px var(--body); border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 8px; padding: 6px 10px; cursor: pointer; }
+.savestate { font: 12px var(--mono); color: var(--muted); margin: 0 0 4px; }
+.savestate.good::before, .savestate.warn::before, .savestate.local::before { content: "●"; margin-inline-end: 6px; }
+.savestate.good::before { color: var(--good); } .savestate.warn::before { color: var(--warn); } .savestate.local::before { color: var(--blue); }
+[dir="rtl"], [dir="rtl"] * { letter-spacing: 0 !important; }
+[dir="rtl"] { --mono: "IBM Plex Sans Arabic", "Instrument Sans", system-ui, sans-serif; }
+[dir="rtl"] .kpi b, [dir="rtl"] .limit b { text-align: right; }
+[dir="rtl"] .chart text { font-family: var(--body); }
+[dir="rtl"] .kpi b, [dir="rtl"] .limit b, [dir="rtl"] #vProfit, [dir="rtl"] .inbox input { unicode-bidi: plaintext; }
+</style>
+
+<div class="wrap" id="app">
+  <header>
+    <div class="topbar">
+      <button type="button" class="btn" id="installBtn" hidden data-t="install"></button>
+      <span class="seg lang" role="group" aria-label="Langue / Language / اللغة">
+        <button type="button" data-lang="fr">FR</button><button type="button" data-lang="en">EN</button><button type="button" data-lang="ar">عربي</button>
+      </span>
+    </div>
+    <h1 data-t="h1"></h1>
+    <p class="lead" data-t="lead"></p>
+    <div class="ios-hint" id="iosHint" hidden><span data-t="iosHint"></span><button type="button" id="iosClose" aria-label="x">×</button></div>
+  </header>
+
+  <div class="cols">
+    <section class="card sticky" aria-labelledby="h-in">
+      <div class="charthead">
+        <div><h2 id="h-in" data-t="inTitle"></h2><p class="hint" style="margin:0" data-t="inHint"></p></div>
+        <div style="display:flex;gap:8px;align-items:center"><button type="button" class="btn" id="exBtn" style="min-height:38px;padding:8px 12px;font-size:13px" data-t="exampleBtn"></button><button type="button" class="btn" id="reset" style="min-height:38px;padding:8px 12px;font-size:13px" data-t="reset"></button></div>
+      </div>
+      <div class="projbar">
+        <select id="projSel" aria-label="Produit"></select>
+        <button type="button" class="btn" id="projNew" data-t="pNew"></button>
+        <button type="button" class="btn" id="projMore" aria-expanded="false" aria-controls="projPanel">⋯</button>
+      </div>
+      <div class="projpanel" id="projPanel" hidden>
+        <label for="projName" data-t="pName"></label><input id="projName" maxlength="80">
+        <div class="row">
+          <button type="button" class="btn" id="projDup" data-t="pDup"></button>
+          <button type="button" class="btn danger" id="projDel" data-t="pDel"></button>
+          <button type="button" class="btn" id="projExport" data-t="pExport"></button>
+          <label class="btn" for="projImport" style="color:var(--ink);font-size:14px" data-t="pImport"></label><input type="file" id="projImport" accept="application/json,.json" hidden>
+        </div>
+        <small id="dataDir" class="hint" style="margin:0;word-break:break-all" hidden></small>
+        <details id="histBox"><summary data-t="pHist"></summary><ul id="histList"></ul></details>
+      </div>
+      <p class="savestate" id="saveState" aria-live="polite"></p>
+
+      <fieldset class="slip"><legend data-t="legProduct"></legend>
+        <div class="field"><label for="price" data-t="price"></label><span class="inbox"><input id="price" inputmode="decimal"><em data-t="cur"></em></span></div>
+        <div class="field"><label for="cost" data-t="cost"></label><span class="inbox"><input id="cost" inputmode="decimal"><em data-t="cur"></em></span><span class="sub" data-t="costSub"></span></div>
+        <div class="field"><label for="pack" data-t="pack"></label><span class="inbox"><input id="pack" inputmode="decimal"><em data-t="cur"></em></span><span class="sub" data-t="packSub"></span></div>
+      </fieldset>
+
+      <fieldset class="slip"><legend data-t="legOrders"></legend>
+        <div class="field"><label for="leads" data-t="leads"></label><span class="inbox"><input id="leads" inputmode="numeric"><em data-t="unitOrders"></em></span></div>
+        <div class="field"><label for="confN" data-t="confN"></label><span class="inbox"><input id="confN" inputmode="numeric"><em data-t="unitOrders"></em></span><span class="sub" id="confSub"></span></div>
+        <div class="field"><label for="delivN" data-t="delivN"></label><span class="inbox"><input id="delivN" inputmode="numeric"><em data-t="unitParcels"></em></span><span class="sub" id="delivSub"></span></div>
+      </fieldset>
+
+      <fieldset class="slip"><legend data-t="legShip"></legend>
+        <div class="field"><label for="ship" data-t="ship"></label><span class="inbox"><input id="ship" inputmode="decimal"><em data-t="cur"></em></span></div>
+        <div class="field"><label for="ret" data-t="ret"></label><span class="inbox"><input id="ret" inputmode="decimal"><em data-t="cur"></em></span><span class="sub" data-t="retSub"></span></div>
+        <div class="toggle"><label for="clientPays" data-t="clientPays"></label><input id="clientPays" type="checkbox"></div>
+      </fieldset>
+
+      <fieldset class="slip"><legend data-t="legAds"></legend>
+        <div class="field"><label for="ads" data-t="ads"></label><span class="inbox"><input id="ads" inputmode="decimal"><em id="adsCur"></em></span></div>
+        <div class="toggle"><span data-t="currency"></span><span class="seg" role="group"><button type="button" id="curUsd">$</button><button type="button" id="curDt" data-t="cur"></button></span></div>
+        <div class="field" id="rateRow"><label for="rate" data-t="rate"></label><span class="inbox"><input id="rate" inputmode="decimal"><em data-t="cur"></em></span><span class="sub" data-t="rateSub"></span></div>
+      </fieldset>
+
+      <fieldset class="slip"><legend data-t="legTax"></legend>
+        <div class="toggle"><label for="wht" data-t="wht"></label><input id="wht" type="checkbox"></div>
+        <div class="field"><label for="fixed" data-t="fixed"></label><span class="inbox"><input id="fixed" inputmode="decimal"><em data-t="cur"></em></span><span class="sub" data-t="fixedSub"></span></div>
+      </fieldset>
+    </section>
+
+    <div style="display:grid;gap:16px;min-width:0">
+      <section class="card" id="verdict" aria-live="polite" aria-labelledby="h-v">
+        <div class="vtop"><h2 id="h-v" data-t="vTitle"></h2><span class="pill" id="vPill"></span></div>
+        <div id="vProfit" class="num"></div>
+        <p id="vLine"></p>
+        <div class="kpis" id="kpis"></div>
+      </section>
+
+      <section class="card" id="journal" aria-labelledby="h-j">
+        <div class="charthead">
+          <div><h2 id="h-j" data-t="jTitle"></h2><p class="hint" style="margin:0" data-t="jHint"></p></div>
+          <span class="seg" role="group"><button type="button" id="mPrev" aria-label="‹">‹</button><button type="button" id="mLabel" style="cursor:default"></button><button type="button" id="mNext" aria-label="›">›</button></span>
+        </div>
+        <div class="jday"><label for="jDate" data-t="jDay"></label><input type="date" id="jDate"></div>
+        <div class="jgrid">
+          <div class="field"><label for="jLeads" data-t="leads"></label><span class="inbox"><input id="jLeads" inputmode="numeric"><em data-t="unitOrders"></em></span></div>
+          <div class="field"><label for="jConf" data-t="confN"></label><span class="inbox"><input id="jConf" inputmode="numeric"><em data-t="unitOrders"></em></span></div>
+          <div class="field"><label for="jDeliv" data-t="delivN"></label><span class="inbox"><input id="jDeliv" inputmode="numeric"><em data-t="unitParcels"></em></span></div>
+          <div class="field"><label for="jRet" data-t="jRet"></label><span class="inbox"><input id="jRet" inputmode="numeric"><em data-t="unitParcels"></em></span></div>
+          <div class="field"><label for="jAds" data-t="jAds"></label><span class="inbox"><input id="jAds" inputmode="decimal"><em id="jAdsCur"></em></span></div>
+        </div>
+        <div class="jres" id="jRes" aria-live="polite"></div>
+        <svg class="chart" id="jChart" viewBox="0 0 640 220" role="img"></svg>
+        <div class="legend"><span><i style="background:var(--good)"></i><span data-t="jLgDay"></span></span><span><i style="background:var(--bad)"></i><span data-t="jLgLoss"></span></span><span><i style="background:var(--blue);height:3px;vertical-align:3px"></i><span data-t="jLgCum"></span></span><span><i style="background:transparent;outline:2px solid var(--ink)"></i><span data-t="jLgSel"></span></span></div>
+        <div class="kpis" id="jTotals"></div>
+        <p class="hint" id="jAll" style="margin:10px 0 0"></p>
+        <div class="jbtns">
+          <button type="button" class="btn" id="jUse" data-t="jUse"></button>
+          <button type="button" class="btn primary" id="jCsv" data-t="jCsv"></button>
+          <button type="button" class="btn" id="jCopy" data-t="jCopy"></button>
+        </div>
+        <p class="hint" style="margin:8px 0 0" data-t="jSheets"></p>
+      </section>
+
+      <section class="card" aria-labelledby="h-wf">
+        <div class="charthead"><div><h2 id="h-wf" data-t="wfTitle"></h2><p class="hint" style="margin:0" data-t="wfHint"></p></div></div>
+        <svg class="chart" id="wf" viewBox="0 0 640 300" role="img"></svg>
+      </section>
+
+      <div class="grid2">
+        <section class="card" aria-labelledby="h-fun">
+          <h2 id="h-fun" data-t="funTitle"></h2><p class="hint" data-t="funHint"></p>
+          <svg class="chart" id="fun" viewBox="0 0 320 200" role="img"></svg>
+        </section>
+        <section class="card" aria-labelledby="h-lim">
+          <h2 id="h-lim" data-t="limTitle"></h2><p class="hint" data-t="limHint"></p>
+          <div class="limits" id="limits" style="grid-template-columns:1fr"></div>
+        </section>
+      </div>
+
+      <section class="card" aria-labelledby="h-sens">
+        <div class="charthead">
+          <div><h2 id="h-sens" data-t="sensTitle"></h2><p class="hint" style="margin:0" id="sensHint"></p></div>
+          <span class="seg" role="group"><button type="button" data-sens="deliv" class="on" data-t="sDeliv"></button><button type="button" data-sens="conf" data-t="sConf"></button><button type="button" data-sens="cpa" data-t="sAds"></button><button type="button" data-sens="price" data-t="sPrice"></button></span>
+        </div>
+        <svg class="chart" id="sens" viewBox="0 0 640 260" role="img"></svg>
+        <div class="legend"><span><i style="background:var(--good)"></i><span data-t="lgProfit"></span></span><span><i style="background:var(--bad)"></i><span data-t="lgLoss"></span></span><span><i style="background:var(--blue)"></i><span data-t="lgYou"></span></span></div>
+      </section>
+
+      <section class="card" aria-labelledby="h-adv">
+        <h2 id="h-adv" data-t="advTitle"></h2><p class="hint" data-t="advHint"></p>
+        <ul id="advice"></ul>
+      </section>
+
+      <section class="card" id="contact" aria-labelledby="h-c">
+        <h2 id="h-c" data-t="cTitle"></h2>
+        <p data-t="cText"></p>
+        <label for="who" class="hint" style="color:inherit;opacity:.75;display:block;margin-bottom:6px" data-t="cName"></label>
+        <input id="who" autocomplete="given-name">
+        <div class="row">
+          <a class="btn primary" id="waBtn" href="#" target="_blank" rel="noopener" data-t="waBtn"></a>
+          <a class="btn ghost" id="igBtn" href="#" target="_blank" rel="noopener" data-t="igBtn"></a>
+          <button type="button" class="btn ghost" id="copyLink" data-t="copy"></button>
+        </div>
+        <small data-t="cNote"></small>
+      </section>
+
+      <footer data-t="footer"></footer>
+    </div>
+  </div>
+</div>
+
+<div id="bar" aria-hidden="true"><div><span data-t="barLabel"></span><br><i class="dot" id="barDot"></i><b class="num" id="barProfit"></b></div><a href="#verdict" data-t="barLink"></a></div>
+<script>
+"use strict";
+// ---------------- configuration: Haroun's contact links
+const CONFIG = { whatsapp: "", instagram: "" };   // whatsapp: international number without + (e.g. 21612345678); instagram: profile or community link
+
+// ---------------- texts in French, English and Arabic
+const T = {
+fr: {
+  h1: "Combien tu gagnes vraiment par commande?",
+  lead: "Mets tes chiffres: prix, livraison, retours, pub. Le calcul montre ton bénéfice réel en paiement à la livraison, ce qui va bien et ce qui te coûte.",
+  inTitle: "Tes chiffres", inHint: "Pour une période: une semaine, un mois, un test.", 
+  legProduct: "Produit", price: "Prix de vente", cost: "Coût du produit", costSub: "Ce que tu paies au fournisseur, par pièce.",
+  pack: "Emballage", packSub: "Carton, scotch, étiquette, par colis envoyé.",
+  legOrders: "Commandes", leads: "Commandes reçues", unitOrders: "cmd", unitParcels: "colis", confN: "Commandes confirmées",
+  confSub: (c, r) => `Sur ${c} commandes reçues, soit un taux de confirmation de ${r}.`, confOver: (c) => `Plus que les ${c} commandes reçues: vérifie le chiffre.`, delivN: "Colis livrés et payés",
+  delivSub: (c, r) => `Sur ${c} colis confirmés, soit un taux de livraison de ${r}.`, delivOver: (c) => `Plus que les ${c} colis confirmés: vérifie le chiffre.`,
+  legShip: "Livraison", ship: "Frais de livraison", ret: "Frais de retour", retSub: "Ce que la société te prend par colis refusé.",
+  clientPays: "Le client paie la livraison en plus", legAds: "Publicité", ads: "Dépense pub", currency: "Devise", rate: "1 $ =",
+  rateSub: "Le taux réel de ta carte, frais compris.", legTax: "Taxes et frais", wht: "Retenue 3% (pas de matricule fiscal)",
+  fixed: "Autres frais de la période", fixedSub: "Abonnement store, internet, photos, etc.", cur: "DT",
+  vTitle: "Bénéfice net de la période", pGood: "Rentable", pWarn: "Juste", pBad: "Tu perds",
+  vLine: (per, pct, rev) => `Soit <b class="num">${per}</b> par commande livrée, <b class="num">${pct}</b> du chiffre d'affaires (${rev}).`,
+  vNone: "Aucune commande livrée avec ces chiffres.",
+  kMargin: "Marge produit", perPiece: (x) => `${x} par pièce`, kConf: "Confirmation", of: (a, b) => `${a} sur ${b}`,
+  kDeliv: "Livraison", returns: (n) => `${n} retours`, kCpa: "Pub par livrée", limit: (x) => `limite ${x}`,
+  kRoas: "ROAS", noAds: "sans pub", roasSub: "CA ÷ pub", kMin: "Prix minimum", minSub: "pour ne pas perdre",
+  wfTitle: "Où part ton argent", wfHint: "Par commande livrée, du prix encaissé au bénéfice.",
+  wf: ["Prix", "Produit", "Emballage", "Livraison", "Retours", "Retenue 3%", "Pub", "Frais", "Bénéfice"],
+  funTitle: "Tes commandes", funHint: "Ce qui reste à chaque étape.", fun: ["Reçues", "Confirmées", "Livrées"],
+  limTitle: "Tes limites", limHint: "Au-delà, tu perds de l'argent.",
+  lim: ["Pub max par commande livrée", "Pub max par commande reçue", "Prix minimum"], youPay: (x) => `tu paies ${x}`, youSell: (x) => `tu vends à ${x}`,
+  sensTitle: "Et si ça change?", sDeliv: "Livraison", sConf: "Confirmation", sAds: "Pub", sPrice: "Prix",
+  sNames: { deliv: "taux de livraison", conf: "taux de confirmation", cpa: "dépense pub", price: "prix de vente" },
+  sensHint: (n, u) => `Ton bénéfice si le ${n} change${u ? " (en " + u + ")" : ""}. Le point montre où tu es.`,
+  seuil: "seuil", you: "toi", lgProfit: "Bénéfice", lgLoss: "Perte", lgYou: "Toi aujourd'hui",
+  advTitle: "Ce que disent tes chiffres", advHint: "Repères indicatifs: adapte-les à ton produit.",
+  aMarginBad: (m) => `Ta marge produit est de ${m}. En paiement à la livraison avec pub, vise au moins 50 % (prix ≈ 2 à 3 fois le coût).`,
+  aMarginWarn: (m) => `Marge produit de ${m}: ça passe si la confirmation et la livraison sont bonnes. Un pack ou un prix un peu plus haut te donne de l'air.`,
+  aMarginGood: (m) => `Bonne marge produit (${m}): tu as de la place pour la pub et les retours.`,
+  aConf: (c) => `Confirmation à ${c}. Réponds vite aux messages, appelle dans l'heure et annonce le prix complet avec la livraison.`,
+  aDeliv: (d, n, x) => `Livraison à ${d}: ${n} colis reviennent et te coûtent ${x}. Rappelle le client la veille et évite les longs délais.`,
+  aAdsBad: (c, m) => `Ta pub coûte ${c} par commande livrée, ta limite est ${m}. Change la vidéo (le hook) avant de mettre plus de budget.`,
+  aAdsWarn: (c, m) => `Pub à ${c} par livrée pour une limite de ${m}: rentable, mais peu de marge. Teste 2 ou 3 nouvelles vidéos.`,
+  aAdsGood: (c, m) => `Pub efficace: ${c} par livrée, bien sous ta limite de ${m}. Tu peux augmenter le budget doucement (20 à 30 % tous les 2 ou 3 jours).`,
+  aWht: (x) => `La retenue de 3 % te coûte ${x} sur cette période. Avec un matricule fiscal, la société de livraison ne la prend plus.`,
+  aMin: (p, m) => `Ton prix (${p}) est sous le prix minimum (${m}) pour ces chiffres.`,
+  cTitle: "Tu veux un avis sur tes chiffres?", cText: "Envoie ton résultat sur WhatsApp: je regarde et je te dis où tu perds de l'argent. Gratuit, je réponds moi-même.",
+  cName: "Ton prénom (pour que je sache qui écrit)", cPh: "Ex: Amira", waBtn: "Envoyer mes chiffres sur WhatsApp", igBtn: "Rejoindre la communauté Instagram",
+  copy: "Copier le résumé", copied: "Résumé copié", copyFail: "Copie impossible ici",
+  cNote: "Le message part de ton WhatsApp: tu vois le texte avant d'envoyer. Ce site n'enregistre rien.",
+  footer: "Calcul en paiement à la livraison. Les colis retournés reviennent en stock. Vérifie tes frais réels avec ta société de livraison; la retenue de 3% est calculée sur le montant encaissé.",
+  barLabel: "Bénéfice net", barLink: "Voir le détail", perCmd: "/cmd",
+  example: "Exemple",
+  exampleBtn: "Voir un exemple",
+  reset: "Remettre à zéro",
+  install: "Installer l'app",
+  iosHint: "Pour l'installer: bouton Partager, puis « Sur l'écran d'accueil ».",
+  pEmpty: "À remplir",
+  vEmpty: "Commence par le prix de vente et le coût du produit, ou touche « Voir un exemple ».",
+  aEmpty: "Remplis tes chiffres: les conseils apparaissent ici.",
+  jTitle: "Suivi jour par jour",
+  jHint: "Note les chiffres de chaque jour: tu vois le bénéfice du jour et son effet sur le mois.",
+  jDay: "Jour",
+  jRet: "Colis retournés",
+  jAds: "Pub du jour",
+  jToday: (d) => `Ce jour (${d})`,
+  jVsAvg: (x, up) => `${up ? "▲" : "▼"} ${x} par rapport à un jour moyen`,
+  jFirst: "Premier jour noté ce mois",
+  jNoDay: "Rien de noté ce jour",
+  jMonth: "Ce mois",
+  jWithout: (x) => `sans ce jour: ${x}`,
+  jFixed: (x) => `après ${x} de frais fixes`,
+  jProj: "Fin du mois à ce rythme",
+  jProjSub: "frais fixes déduits",
+  jProjPast: "mois terminé",
+  jEmpty: "Rien de noté ce mois. Remplis le jour au-dessus.",
+  jAdsM: "Pub du mois",
+  jRev: "Chiffre d'affaires",
+  jRate: (x) => `taux ${x}`,
+  jAll: (x, n) => `Tous tes produits ce mois (${n}): ${x}`,
+  jUse: "Mettre ce mois dans le calcul",
+  jCsv: "Télécharger le rapport (CSV)",
+  jCopy: "Copier pour Google Sheets",
+  jCopied: "Copié: colle dans Google Sheets",
+  jSheets: "Excel: ouvre le fichier CSV. Google Sheets: Fichier → Importer, ou colle après « Copier ».",
+  jLgDay: "Bénéfice du jour",
+  jLgLoss: "Perte du jour",
+  jLgCum: "Cumul du mois",
+  jLgSel: "Jour choisi",
+  csvTitle: (m) => `Rapport ${m}`,
+  csvSummary: "Résumé du mois",
+  csvTotal: "Total tous produits",
+  csvSim: (n) => `Calcul (simulation): ${n}`,
+  csvHead: ["Date", "Produit", "Commandes reçues", "Confirmées", "Livrées", "Retournées", "Pub (DT)", "Chiffre d'affaires (DT)", "Coût produits (DT)", "Emballage (DT)", "Livraison (DT)", "Frais retour (DT)", "Retenue 3% (DT)", "Bénéfice du jour (DT)"],
+  csvSumHead: ["Produit", "Commandes reçues", "Confirmées", "Taux de confirmation", "Livrées", "Taux de livraison", "Retournées", "Chiffre d'affaires (DT)", "Pub (DT)", "Bénéfice avant frais fixes (DT)", "Frais fixes (DT)", "Bénéfice net (DT)"],
+  csvSimRows: ["Prix de vente (DT)", "Coût du produit (DT)", "Marge produit", "Bénéfice net de la période (DT)", "Pub max par commande livrée (DT)", "Prix minimum (DT)"],
+  pDir: (d) => `Tes produits sont enregistrés dans: ${d}`,
+  pNew: "+ Nouveau", pName: "Nom du produit", pDefault: "Produit", pDup: "Dupliquer", pDel: "Supprimer", pExport: "Exporter", pImport: "Importer",
+  pCopy: (n) => `${n} (copie)`, pDelQ: (n) => `Supprimer « ${n} » ?`, pHist: "Versions précédentes", pRestore: "Restaurer", pNoHist: "Aucune version pour l'instant.",
+  pImported: (n) => `${n} produit(s) importé(s).`, pBadFile: "Fichier non reconnu.",
+  sServer: (h) => `Enregistré sur ton ordinateur · ${h}`, sSaving: "Enregistrement…", sPending: "Enregistré dans le navigateur. Copie sur l'ordinateur dès que Rbe7 répond.", sLocal: "Enregistré sur cet appareil",
+  sum: (who, r) => [`Salem Haroun${who ? ", c'est " + who : ""}. Voici mes chiffres du calculateur:`,
+    `Prix ${r.price} · coût ${r.cost} · emballage ${r.pack}`, `${r.leads} commandes · ${r.conf} confirmées · ${r.deliv} livrées`,
+    `Livraison ${r.ship}${r.clientPays ? " (payée par le client)" : ""} · retour ${r.ret}`, `Pub ${r.ads} · retenue 3 % ${r.wht ? "oui" : "non"}`,
+    `Résultat: ${r.profit} (${r.per} par livrée)`, `Tu peux me dire où je perds de l'argent?`],
+},
+en: {
+  h1: "How much do you really make per order?",
+  lead: "Enter your numbers: price, delivery, returns, ads. The calculator shows your real profit with cash on delivery, what works and what costs you.",
+  inTitle: "Your numbers", inHint: "For one period: a week, a month, a test.", 
+  legProduct: "Product", price: "Selling price", cost: "Product cost", costSub: "What you pay the supplier, per piece.",
+  pack: "Packaging", packSub: "Box, tape, label, per parcel sent.",
+  legOrders: "Orders", leads: "Orders received", unitOrders: "orders", unitParcels: "parcels", confN: "Confirmed orders",
+  confSub: (c, r) => `Out of ${c} orders received, a confirmation rate of ${r}.`, confOver: (c) => `More than the ${c} orders received: check the number.`, delivN: "Parcels delivered and paid",
+  delivSub: (c, r) => `Out of ${c} confirmed parcels, a delivery rate of ${r}.`, delivOver: (c) => `More than the ${c} confirmed parcels: check the number.`,
+  legShip: "Delivery", ship: "Delivery fee", ret: "Return fee", retSub: "What the courier charges per refused parcel.",
+  clientPays: "The customer pays delivery on top", legAds: "Ads", ads: "Ad spend", currency: "Currency", rate: "1 $ =",
+  rateSub: "Your card's real rate, fees included.", legTax: "Tax and costs", wht: "3% withholding (no tax ID)",
+  fixed: "Other costs for the period", fixedSub: "Store subscription, internet, photos, etc.", cur: "TND",
+  vTitle: "Net profit for the period", pGood: "Profitable", pWarn: "Tight", pBad: "Losing",
+  vLine: (per, pct, rev) => `That is <b class="num">${per}</b> per delivered order, <b class="num">${pct}</b> of revenue (${rev}).`,
+  vNone: "No delivered orders with these numbers.",
+  kMargin: "Product margin", perPiece: (x) => `${x} per piece`, kConf: "Confirmation", of: (a, b) => `${a} of ${b}`,
+  kDeliv: "Delivery", returns: (n) => `${n} returns`, kCpa: "Ads per delivered", limit: (x) => `limit ${x}`,
+  kRoas: "ROAS", noAds: "no ads", roasSub: "revenue ÷ ads", kMin: "Minimum price", minSub: "to avoid a loss",
+  wfTitle: "Where your money goes", wfHint: "Per delivered order, from the price collected to profit.",
+  wf: ["Price", "Product", "Packaging", "Delivery", "Returns", "3% tax", "Ads", "Costs", "Profit"],
+  funTitle: "Your orders", funHint: "What is left at each step.", fun: ["Received", "Confirmed", "Delivered"],
+  limTitle: "Your limits", limHint: "Beyond these, you lose money.",
+  lim: ["Max ads per delivered order", "Max ads per order received", "Minimum price"], youPay: (x) => `you pay ${x}`, youSell: (x) => `you sell at ${x}`,
+  sensTitle: "What if it changes?", sDeliv: "Delivery", sConf: "Confirmation", sAds: "Ads", sPrice: "Price",
+  sNames: { deliv: "delivery rate", conf: "confirmation rate", cpa: "ad spend", price: "selling price" },
+  sensHint: (n, u) => `Your profit if the ${n} changes${u ? " (in " + u + ")" : ""}. The dot shows where you are.`,
+  seuil: "break-even", you: "you", lgProfit: "Profit", lgLoss: "Loss", lgYou: "You today",
+  advTitle: "What your numbers say", advHint: "Rough benchmarks: adapt them to your product.",
+  aMarginBad: (m) => `Your product margin is ${m}. With cash on delivery and ads, aim for at least 50 % (price about 2 to 3 times the cost).`,
+  aMarginWarn: (m) => `Product margin of ${m}: it works if confirmation and delivery are good. A bundle or a slightly higher price gives you room.`,
+  aMarginGood: (m) => `Good product margin (${m}): you have room for ads and returns.`,
+  aConf: (c) => `Confirmation at ${c}. Answer messages fast, call within the hour and state the full price including delivery.`,
+  aDeliv: (d, n, x) => `Delivery at ${d}: ${n} parcels come back and cost you ${x}. Call the customer the day before and avoid long delays.`,
+  aAdsBad: (c, m) => `Your ads cost ${c} per delivered order and your limit is ${m}. Change the video (the hook) before adding budget.`,
+  aAdsWarn: (c, m) => `Ads at ${c} per delivered order for a limit of ${m}: profitable, but little room. Test 2 or 3 new videos.`,
+  aAdsGood: (c, m) => `Efficient ads: ${c} per delivered order, well under your limit of ${m}. You can raise the budget slowly (20 to 30 % every 2 or 3 days).`,
+  aWht: (x) => `The 3 % withholding costs you ${x} this period. With a tax ID, the courier no longer takes it.`,
+  aMin: (p, m) => `Your price (${p}) is below the minimum price (${m}) for these numbers.`,
+  cTitle: "Want a second look at your numbers?", cText: "Send your result on WhatsApp: I check it and tell you where you lose money. Free, and I answer myself.",
+  cName: "Your first name (so I know who is writing)", cPh: "E.g. Amira", waBtn: "Send my numbers on WhatsApp", igBtn: "Join the Instagram community",
+  copy: "Copy the summary", copied: "Summary copied", copyFail: "Copying isn't possible here",
+  cNote: "The message goes from your WhatsApp: you see the text before sending. This site stores nothing.",
+  footer: "Calculated for cash on delivery. Returned parcels go back to stock. Check your real fees with your courier; the 3% withholding is calculated on the amount collected.",
+  barLabel: "Net profit", barLink: "See details", perCmd: "/order",
+  example: "Example",
+  exampleBtn: "See an example",
+  reset: "Reset to 0",
+  install: "Install the app",
+  iosHint: "To install: tap Share, then “Add to Home Screen”.",
+  pEmpty: "To fill in",
+  vEmpty: "Start with the selling price and the product cost, or tap “See an example”.",
+  aEmpty: "Fill in your numbers: advice shows up here.",
+  jTitle: "Day by day",
+  jHint: "Write each day's numbers: see the day's profit and what it does to your month.",
+  jDay: "Day",
+  jRet: "Returned parcels",
+  jAds: "Ads today",
+  jToday: (d) => `This day (${d})`,
+  jVsAvg: (x, up) => `${up ? "▲" : "▼"} ${x} compared with an average day`,
+  jFirst: "First day logged this month",
+  jNoDay: "Nothing logged for this day",
+  jMonth: "This month",
+  jWithout: (x) => `without this day: ${x}`,
+  jFixed: (x) => `after ${x} of fixed costs`,
+  jProj: "Month end at this pace",
+  jProjSub: "fixed costs deducted",
+  jProjPast: "month finished",
+  jEmpty: "Nothing logged this month. Fill in the day above.",
+  jAdsM: "Ads this month",
+  jRev: "Revenue",
+  jRate: (x) => `rate ${x}`,
+  jAll: (x, n) => `All your products this month (${n}): ${x}`,
+  jUse: "Use this month in the calculator",
+  jCsv: "Download the report (CSV)",
+  jCopy: "Copy for Google Sheets",
+  jCopied: "Copied: paste into Google Sheets",
+  jSheets: "Excel: open the CSV file. Google Sheets: File → Import, or paste after “Copy”.",
+  jLgDay: "Daily profit",
+  jLgLoss: "Daily loss",
+  jLgCum: "Month running total",
+  jLgSel: "Selected day",
+  csvTitle: (m) => `Report ${m}`,
+  csvSummary: "Month summary",
+  csvTotal: "Total, all products",
+  csvSim: (n) => `Calculator (simulation): ${n}`,
+  csvHead: ["Date", "Product", "Orders received", "Confirmed", "Delivered", "Returned", "Ads (TND)", "Revenue (TND)", "Product cost (TND)", "Packaging (TND)", "Delivery (TND)", "Return fees (TND)", "3% withholding (TND)", "Daily profit (TND)"],
+  csvSumHead: ["Product", "Orders received", "Confirmed", "Confirmation rate", "Delivered", "Delivery rate", "Returned", "Revenue (TND)", "Ads (TND)", "Profit before fixed costs (TND)", "Fixed costs (TND)", "Net profit (TND)"],
+  csvSimRows: ["Selling price (TND)", "Product cost (TND)", "Product margin", "Net profit for the period (TND)", "Max ads per delivered order (TND)", "Minimum price (TND)"],
+  pDir: (d) => `Your products are saved in: ${d}`,
+  pNew: "+ New", pName: "Product name", pDefault: "Product", pDup: "Duplicate", pDel: "Delete", pExport: "Export", pImport: "Import",
+  pCopy: (n) => `${n} (copy)`, pDelQ: (n) => `Delete "${n}"?`, pHist: "Previous versions", pRestore: "Restore", pNoHist: "No versions yet.",
+  pImported: (n) => `${n} product(s) imported.`, pBadFile: "File not recognised.",
+  sServer: (h) => `Saved on your computer · ${h}`, sSaving: "Saving…", sPending: "Saved in the browser. Copied to your computer as soon as Rbe7 responds.", sLocal: "Saved on this device",
+  sum: (who, r) => [`Hi Haroun${who ? ", it's " + who : ""}. Here are my numbers from the calculator:`,
+    `Price ${r.price} · cost ${r.cost} · packaging ${r.pack}`, `${r.leads} orders · ${r.conf} confirmed · ${r.deliv} delivered`,
+    `Delivery ${r.ship}${r.clientPays ? " (paid by the customer)" : ""} · return ${r.ret}`, `Ads ${r.ads} · 3 % withholding ${r.wht ? "yes" : "no"}`,
+    `Result: ${r.profit} (${r.per} per delivered order)`, `Can you tell me where I'm losing money?`],
+},
+ar: {
+  h1: "كم تربح فعلاً في كل طلبية؟",
+  lead: "أدخل أرقامك: السعر، التوصيل، المرتجعات، الإشهار. الحساب يبيّن ربحك الحقيقي في الدفع عند الاستلام، وما يسير جيداً وما يكلّفك.",
+  inTitle: "أرقامك", inHint: "لفترة معيّنة: أسبوع، شهر، تجربة.", 
+  legProduct: "المنتج", price: "سعر البيع", cost: "تكلفة المنتج", costSub: "ما تدفعه للمزوّد عن كل قطعة.",
+  pack: "التغليف", packSub: "كرتون، لاصق، ملصق، لكل طرد مُرسل.",
+  legOrders: "الطلبيات", leads: "الطلبيات المستلمة", unitOrders: "طلبية", unitParcels: "طرد", confN: "الطلبيات المؤكّدة",
+  confSub: (c, r) => `من أصل ${c} طلبية مستلمة، أي نسبة تأكيد ${r}.`, confOver: (c) => `أكثر من ${c} طلبية مستلمة: تحقّق من الرقم.`, delivN: "الطرود المُسلَّمة والمدفوعة",
+  delivSub: (c, r) => `من أصل ${c} طرداً مؤكّداً، أي نسبة تسليم ${r}.`, delivOver: (c) => `أكثر من ${c} طرداً مؤكّداً: تحقّق من الرقم.`,
+  legShip: "التوصيل", ship: "مصاريف التوصيل", ret: "مصاريف الإرجاع", retSub: "ما تأخذه شركة التوصيل عن كل طرد مرفوض.",
+  clientPays: "الحريف يدفع التوصيل زيادة على السعر", legAds: "الإشهار", ads: "مصاريف الإشهار", currency: "العملة", rate: "1 $ =",
+  rateSub: "السعر الحقيقي لبطاقتك، مع المصاريف.", legTax: "الضرائب والمصاريف", wht: "خصم 3% (بدون معرّف جبائي)",
+  fixed: "مصاريف أخرى للفترة", fixedSub: "اشتراك المتجر، إنترنت، تصوير، إلخ.", cur: "د.ت",
+  vTitle: "الربح الصافي للفترة", pGood: "مربح", pWarn: "على الحافة", pBad: "خسارة",
+  vLine: (per, pct, rev) => `أي <b class="num">${per}</b> لكل طلبية مُسلَّمة، و<b class="num">${pct}</b> من رقم المعاملات (${rev}).`,
+  vNone: "لا توجد طلبيات مُسلَّمة بهذه الأرقام.",
+  kMargin: "هامش المنتج", perPiece: (x) => `${x} للقطعة`, kConf: "التأكيد", of: (a, b) => `${a} من ${b}`,
+  kDeliv: "التسليم", returns: (n) => `${n} مرتجعات`, kCpa: "الإشهار لكل مُسلَّمة", limit: (x) => `الحد ${x}`,
+  kRoas: "ROAS", noAds: "بدون إشهار", roasSub: "المبيعات ÷ الإشهار", kMin: "أدنى سعر", minSub: "حتى لا تخسر",
+  wfTitle: "أين يذهب مالك", wfHint: "لكل طلبية مُسلَّمة، من السعر المحصَّل إلى الربح.",
+  wf: ["السعر", "المنتج", "التغليف", "التوصيل", "المرتجعات", "الخصم", "الإشهار", "مصاريف", "الربح"],
+  funTitle: "طلبياتك", funHint: "ما يبقى في كل مرحلة.", fun: ["مستلمة", "مؤكّدة", "مُسلَّمة"],
+  limTitle: "حدودك", limHint: "بعدها تخسر المال.",
+  lim: ["أقصى إشهار لكل طلبية مُسلَّمة", "أقصى إشهار لكل طلبية مستلمة", "أدنى سعر"], youPay: (x) => `تدفع ${x}`, youSell: (x) => `تبيع بـ ${x}`,
+  sensTitle: "وإذا تغيّر؟", sDeliv: "التسليم", sConf: "التأكيد", sAds: "الإشهار", sPrice: "السعر",
+  sNames: { deliv: "نسبة التسليم", conf: "نسبة التأكيد", cpa: "مصاريف الإشهار", price: "سعر البيع" },
+  sensHint: (n, u) => `ربحك إذا تغيّرت ${n}${u ? " (بـ " + u + ")" : ""}. النقطة تبيّن أين أنت.`,
+  seuil: "التعادل", you: "أنت", lgProfit: "ربح", lgLoss: "خسارة", lgYou: "أنت اليوم",
+  advTitle: "ماذا تقول أرقامك", advHint: "مؤشرات تقريبية: كيّفها حسب منتجك.",
+  aMarginBad: (m) => `هامش منتجك ${m}. في الدفع عند الاستلام مع الإشهار، استهدف 50% على الأقل (السعر حوالي 2 إلى 3 أضعاف التكلفة).`,
+  aMarginWarn: (m) => `هامش المنتج ${m}: يمشي إذا كان التأكيد والتسليم جيدين. عرض مزدوج أو سعر أعلى قليلاً يعطيك مجالاً.`,
+  aMarginGood: (m) => `هامش منتج جيد (${m}): عندك مجال للإشهار والمرتجعات.`,
+  aConf: (c) => `التأكيد ${c}. أجب الرسائل بسرعة، اتصل خلال ساعة وأعلن السعر كاملاً مع التوصيل.`,
+  aDeliv: (d, n, x) => `التسليم ${d}: ${n} طرداً يرجع ويكلّفك ${x}. اتصل بالحريف قبل يوم وتجنّب التأخير الطويل.`,
+  aAdsBad: (c, m) => `إشهارك يكلّف ${c} لكل طلبية مُسلَّمة، وحدّك ${m}. غيّر الفيديو (البداية) قبل زيادة الميزانية.`,
+  aAdsWarn: (c, m) => `الإشهار ${c} لكل مُسلَّمة والحد ${m}: مربح لكن الهامش قليل. جرّب 2 أو 3 فيديوهات جديدة.`,
+  aAdsGood: (c, m) => `إشهار فعّال: ${c} لكل مُسلَّمة، أقل بكثير من حدّك ${m}. يمكنك زيادة الميزانية تدريجياً (20 إلى 30% كل 2 أو 3 أيام).`,
+  aWht: (x) => `خصم 3% يكلّفك ${x} في هذه الفترة. مع معرّف جبائي، لا تأخذه شركة التوصيل.`,
+  aMin: (p, m) => `سعرك (${p}) أقل من أدنى سعر (${m}) بهذه الأرقام.`,
+  cTitle: "تحب رأيي في أرقامك؟", cText: "أرسل نتيجتك على واتساب: أراجعها وأقول لك أين تخسر المال. مجاناً، وأردّ عليك بنفسي.",
+  cName: "اسمك (لأعرف من يكتب)", cPh: "مثال: أميرة", waBtn: "أرسل أرقامي على واتساب", igBtn: "انضم إلى مجتمع إنستغرام",
+  copy: "نسخ الملخص", copied: "تم النسخ", copyFail: "النسخ غير ممكن هنا",
+  cNote: "الرسالة تُرسل من واتسابك: ترى النص قبل الإرسال. هذا الموقع لا يحفظ شيئاً.",
+  footer: "الحساب بالدفع عند الاستلام. الطرود المرتجعة تعود إلى المخزون. تحقّق من مصاريفك الحقيقية مع شركة التوصيل؛ خصم 3% محسوب على المبلغ المحصَّل.",
+  barLabel: "الربح الصافي", barLink: "التفاصيل", perCmd: "/طلبية",
+  example: "مثال",
+  exampleBtn: "شاهد مثالاً",
+  reset: "تصفير",
+  install: "ثبّت التطبيق",
+  iosHint: "للتثبيت: زر المشاركة ثم «إضافة إلى الشاشة الرئيسية».",
+  pEmpty: "للتعبئة",
+  vEmpty: "ابدأ بسعر البيع وتكلفة المنتج، أو اضغط «شاهد مثالاً».",
+  aEmpty: "أدخل أرقامك: النصائح تظهر هنا.",
+  jTitle: "المتابعة اليومية",
+  jHint: "سجّل أرقام كل يوم: ترى ربح اليوم وتأثيره على الشهر.",
+  jDay: "اليوم",
+  jRet: "الطرود المرتجعة",
+  jAds: "إشهار اليوم",
+  jToday: (d) => `هذا اليوم (${d})`,
+  jVsAvg: (x, up) => `${up ? "▲" : "▼"} ${x} مقارنة بيوم عادي`,
+  jFirst: "أول يوم مسجّل هذا الشهر",
+  jNoDay: "لا شيء مسجّل لهذا اليوم",
+  jMonth: "هذا الشهر",
+  jWithout: (x) => `بدون هذا اليوم: ${x}`,
+  jFixed: (x) => `بعد ${x} مصاريف ثابتة`,
+  jProj: "آخر الشهر بهذا النسق",
+  jProjSub: "بعد طرح المصاريف الثابتة",
+  jProjPast: "شهر منتهٍ",
+  jEmpty: "لا شيء مسجّل هذا الشهر. املأ اليوم أعلاه.",
+  jAdsM: "إشهار الشهر",
+  jRev: "رقم المعاملات",
+  jRate: (x) => `نسبة ${x}`,
+  jAll: (x, n) => `كل منتجاتك هذا الشهر (${n}): ${x}`,
+  jUse: "استعمل هذا الشهر في الحساب",
+  jCsv: "تحميل التقرير (CSV)",
+  jCopy: "نسخ لـ Google Sheets",
+  jCopied: "تم النسخ: الصق في Google Sheets",
+  jSheets: "Excel: افتح ملف CSV. Google Sheets: ملف ← استيراد، أو الصق بعد «نسخ».",
+  jLgDay: "ربح اليوم",
+  jLgLoss: "خسارة اليوم",
+  jLgCum: "مجموع الشهر",
+  jLgSel: "اليوم المختار",
+  csvTitle: (m) => `تقرير ${m}`,
+  csvSummary: "ملخص الشهر",
+  csvTotal: "المجموع لكل المنتجات",
+  csvSim: (n) => `الحساب (محاكاة): ${n}`,
+  csvHead: ["التاريخ", "المنتج", "الطلبيات المستلمة", "المؤكّدة", "المُسلَّمة", "المرتجعة", "الإشهار (د.ت)", "رقم المعاملات (د.ت)", "تكلفة المنتجات (د.ت)", "التغليف (د.ت)", "التوصيل (د.ت)", "مصاريف الإرجاع (د.ت)", "خصم 3% (د.ت)", "ربح اليوم (د.ت)"],
+  csvSumHead: ["المنتج", "الطلبيات المستلمة", "المؤكّدة", "نسبة التأكيد", "المُسلَّمة", "نسبة التسليم", "المرتجعة", "رقم المعاملات (د.ت)", "الإشهار (د.ت)", "الربح قبل المصاريف الثابتة (د.ت)", "المصاريف الثابتة (د.ت)", "الربح الصافي (د.ت)"],
+  csvSimRows: ["سعر البيع (د.ت)", "تكلفة المنتج (د.ت)", "هامش المنتج", "الربح الصافي للفترة (د.ت)", "أقصى إشهار لكل طلبية مُسلَّمة (د.ت)", "أدنى سعر (د.ت)"],
+  pDir: (d) => `منتجاتك محفوظة في: ${d}`,
+  pNew: "+ جديد", pName: "اسم المنتج", pDefault: "منتج", pDup: "نسخ", pDel: "حذف", pExport: "تصدير", pImport: "استيراد",
+  pCopy: (n) => `${n} (نسخة)`, pDelQ: (n) => `حذف «${n}»؟`, pHist: "النسخ السابقة", pRestore: "استرجاع", pNoHist: "لا توجد نسخ بعد.",
+  pImported: (n) => `تم استيراد ${n} منتج.`, pBadFile: "ملف غير معروف.",
+  sServer: (h) => `محفوظ على حاسوبك · ${h}`, sSaving: "جارٍ الحفظ…", sPending: "محفوظ في المتصفح. يُنسخ إلى حاسوبك عندما يستجيب Rbe7.", sLocal: "محفوظ على هذا الجهاز",
+  sum: (who, r) => [`سلام هارون${who ? "، أنا " + who : ""}. هذه أرقامي من الحاسبة:`,
+    `السعر ${r.price} · التكلفة ${r.cost} · التغليف ${r.pack}`, `${r.leads} طلبية · ${r.conf} مؤكّدة · ${r.deliv} مُسلَّمة`,
+    `التوصيل ${r.ship}${r.clientPays ? " (يدفعه الحريف)" : ""} · الإرجاع ${r.ret}`, `الإشهار ${r.ads} · خصم 3% ${r.wht ? "نعم" : "لا"}`,
+    `النتيجة: ${r.profit} (${r.per} لكل مُسلَّمة)`, `ممكن تقول لي أين أخسر المال؟`],
+},
+};
+let LANG = (() => { try { const l = localStorage.getItem("rbe7-lang"); if (T[l]) return l; } catch (e) {} const n = (navigator.language || "fr").slice(0, 2); return T[n] ? n : "fr"; })();
+const t = (k) => T[LANG][k];
+
+const $ = (id) => document.getElementById(id);
+const EXAMPLE = { price: 0, cost: 0, pack: 0, leads: 0, confN: 0, delivN: 0, ship: 0, ret: 0, clientPays: false, ads: 0, cur: "usd", rate: 3.1, wht: true, fixed: 0, J: {} };   // new products start at 0
+const DEMO = { price: 59, cost: 22, pack: 1.5, leads: 100, confN: 65, delivN: 52, ship: 7, ret: 7, clientPays: false, ads: 60, cur: "usd", rate: 3.1, wht: true, fixed: 0 };
+const NUM = ["price", "cost", "pack", "leads", "confN", "delivN", "ship", "ret", "ads", "rate", "fixed"];
+let S = { ...EXAMPLE };
+let sensVar = "deliv";
+function migrate(s) {
+  if (!s || typeof s !== "object") return { ...EXAMPLE };
+  s = { ...s };
+  if (s.delivN == null && s.deliv != null) s.delivN = Math.round((s.leads || 0) * (s.conf || 0) / 100 * s.deliv / 100);
+  if (s.confN == null && s.conf != null) s.confN = Math.round((s.leads || 0) * s.conf / 100);
+  delete s.deliv; delete s.conf;
+  const out = { ...EXAMPLE };
+  for (const k in EXAMPLE) if (s[k] != null && typeof s[k] === typeof EXAMPLE[k]) out[k] = s[k];
+  out.J = s.J && typeof s.J === "object" && !Array.isArray(s.J) ? { ...s.J } : {};
+  return out;
+}
+
+// ---------------- products: saved on this device at every change, then sent to the local server when one runs
+const LS = {
+  get(k, d) { try { const v = JSON.parse(localStorage.getItem(k)); return v ?? d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+};
+const uid = () => (window.crypto && crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2, 12));
+let P = LS.get("rbe7-projects", {});              // id -> { id, name, data, updated, synced }
+let DIRTY = new Set(LS.get("rbe7-dirty", []));     // changed here, not yet confirmed by the server
+let GONE = new Set(LS.get("rbe7-gone", []));       // deleted here, not yet deleted on the server
+let PID = LS.get("rbe7-current", null);
+let SERVER = "none", pulled = false, lastSync = null, syncing = false, tmr = 0;
+function persist() { LS.set("rbe7-projects", P); LS.set("rbe7-dirty", [...DIRTY]); LS.set("rbe7-gone", [...GONE]); LS.set("rbe7-current", PID); }
+function newName(base) { const names = new Set(Object.values(P).map((x) => x.name)); let i = 1; while (names.has(`${base} ${i}`)) i++; return `${base} ${i}`; }
+function addProject(name, data) { const id = uid(); P[id] = { id, name, data: migrate(data), updated: Date.now() }; DIRTY.add(id); return id; }
+function ensureProject() {
+  if (!Object.keys(P).length) { const old = LS.get("rbe7-calc", null); PID = addProject(newName(t("pDefault")), old); if (!old) P[PID].auto = true; }
+  if (!P[PID]) PID = Object.values(P).sort((a, b) => b.updated - a.updated)[0].id;
+  S = migrate(P[PID].data);
+}
+function save() { askPersist(); const x = P[PID]; delete x.auto; x.data = { ...S }; x.updated = Date.now(); DIRTY.add(PID); persist(); setState(); schedule(400); }
+function touch(id) { delete P[id].auto; P[id].updated = Date.now(); DIRTY.add(id); persist(); setState(); schedule(400); }
+function schedule(ms) { clearTimeout(tmr); tmr = setTimeout(sync, ms); }
+
+async function api(method, path, body, ms = 6000) {
+  const ctl = new AbortController(), k = setTimeout(() => ctl.abort(), ms);
+  try {
+    const r = await fetch("api" + path, { method, cache: "no-store", signal: ctl.signal,
+      headers: body ? { "Content-Type": "application/json" } : {}, body: body ? JSON.stringify(body) : undefined });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    return await r.json();
+  } finally { clearTimeout(k); }
+}
+async function connect() {
+  try {
+    const h = await api("GET", "/health", null, 2500);
+    if (!h || h.app !== "rbe7") throw new Error("no server");
+    const list = await api("GET", "/projects"), seen = new Set();
+    if (list.length) for (const id in P) if (P[id].auto) { delete P[id]; DIRTY.delete(id); }   // untouched placeholder from a new browser
+    for (const s of list) {
+      seen.add(s.id);
+      if (GONE.has(s.id)) continue;
+      const l = P[s.id];
+      if (!l || (!DIRTY.has(s.id) && s.updated > l.updated)) P[s.id] = { id: s.id, name: s.name, data: migrate(s.data), updated: s.updated, synced: true };
+    }
+    for (const id in P) if (P[id].synced && !seen.has(id) && !DIRTY.has(id)) delete P[id];   // deleted from another device
+    pulled = true; SERVER = "on"; LS.set("rbe7-has-server", true);
+    if (h.dir) { $("dataDir").textContent = t("pDir")(h.dir); $("dataDir").dataset.dir = h.dir; $("dataDir").hidden = false; }
+    if (!window.__hb) window.__hb = setInterval(() => api("GET", "/ping", null, 4000)
+      .then(() => { if (SERVER === "down") { SERVER = "on"; schedule(100); } })
+      .catch(() => { if (SERVER === "on") { SERVER = "down"; setState(); } }), 20000);
+    const was = PID; ensureProject(); persist();
+    if (was !== PID || document.activeElement?.tagName !== "INPUT") { S = migrate(P[PID].data); fill(); render(); }
+    renderProjects(); await sync();
+  } catch (e) {
+    SERVER = LS.get("rbe7-has-server", false) ? "down" : "none";
+    setState();
+    if (SERVER === "down") { clearTimeout(tmr); tmr = setTimeout(connect, 5000); }
+  }
+}
+async function sync() {
+  if (!pulled) { if (SERVER === "down") connect(); return; }
+  if (syncing) return schedule(300);
+  syncing = true; setState();
+  try {
+    for (const id of [...GONE]) { await api("DELETE", "/projects/" + id); GONE.delete(id); }
+    for (const id of [...DIRTY]) {
+      const x = P[id]; if (!x) { DIRTY.delete(id); continue; }
+      const sent = x.updated, res = await api("PUT", "/projects/" + id, { name: x.name, data: x.data, updated: x.updated });
+      if (res.kept === "server" && P[id]) { P[id] = { ...P[id], name: res.project.name, data: migrate(res.project.data), updated: res.project.updated };
+        if (id === PID) { S = migrate(P[id].data); fill(); render(); } }
+      if (P[id] && P[id].updated <= Math.max(sent, res.project.updated)) { DIRTY.delete(id); P[id].synced = true; }
+    }
+    SERVER = "on"; lastSync = new Date();
+  } catch (e) { SERVER = "down"; schedule(5000); }
+  syncing = false; persist(); setState(); renderProjects();
+  if (DIRTY.size && SERVER === "on") schedule(200);
+}
+function beacon() {   // last chance when the page closes or goes to the background
+  if (SERVER !== "on" || !navigator.sendBeacon) return;
+  for (const id of DIRTY) { const x = P[id]; if (x) navigator.sendBeacon("api/projects/" + id, new Blob([JSON.stringify({ name: x.name, data: x.data, updated: x.updated })], { type: "application/json" })); }
+}
+addEventListener("pagehide", beacon);
+document.addEventListener("visibilitychange", () => { if (document.hidden) beacon(); else if (SERVER !== "none") (pulled ? schedule(100) : connect()); });
+addEventListener("online", () => (pulled ? schedule(100) : connect()));
+
+function setState() {
+  const el = $("saveState"); if (!el) return;
+  let cls = "local", txt = t("sLocal");
+  if (SERVER === "on") { if (DIRTY.size || GONE.size || syncing) { cls = ""; txt = t("sSaving"); }
+    else { cls = "good"; txt = t("sServer")(lastSync ? lastSync.toLocaleTimeString(LANG === "en" ? "en-GB" : LANG === "ar" ? "ar-TN" : "fr-FR", { hour: "2-digit", minute: "2-digit" }) : ""); } }
+  else if (SERVER === "down") { cls = "warn"; txt = t("sPending"); }
+  el.className = "savestate " + cls; el.textContent = txt;
+}
+function renderProjects() {
+  const list = Object.values(P).sort((a, b) => a.name.localeCompare(b.name));
+  $("projSel").replaceChildren(...list.map((x) => new Option(x.name, x.id, false, x.id === PID)));
+  if (document.activeElement !== $("projName")) $("projName").value = P[PID].name;
+  $("projDel").disabled = list.length < 2;
+  $("histBox").hidden = SERVER !== "on";
+  $("projExport").hidden = window.self !== window.top;   // the online viewer can't download files
+}
+function switchTo(id) { PID = id; S = migrate(P[id].data); persist(); fill(); render(); renderProjects(); $("histBox").open = false; }
+$("projSel").onchange = () => switchTo($("projSel").value);
+$("projNew").onclick = () => { const id = addProject(newName(t("pDefault")), EXAMPLE); persist(); switchTo(id); schedule(100); };
+$("projMore").onclick = () => { const o = $("projPanel").hidden; $("projPanel").hidden = !o; $("projMore").setAttribute("aria-expanded", o); };
+$("projName").addEventListener("input", () => { P[PID].name = $("projName").value.trim() || t("pDefault"); touch(PID);
+  const opt = [...$("projSel").options].find((o) => o.value === PID); if (opt) opt.textContent = P[PID].name; });
+$("projName").addEventListener("blur", renderProjects);
+$("projDup").onclick = () => { const id = addProject(t("pCopy")(P[PID].name), S); persist(); switchTo(id); schedule(100); };
+$("projDel").onclick = () => {
+  if (Object.keys(P).length < 2 || !confirm(t("pDelQ")(P[PID].name))) return;
+  const id = PID; if (P[id].synced || SERVER !== "none") GONE.add(id); DIRTY.delete(id); delete P[id];
+  PID = null; ensureProject(); persist(); switchTo(PID); schedule(100);
+};
+$("projExport").onclick = () => {
+  const blob = new Blob([JSON.stringify({ app: "rbe7", exported: Date.now(), projects: Object.values(P) }, null, 1)], { type: "application/json" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "rbe7-produits.json"; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+};
+$("projImport").onchange = async () => {
+  const f = $("projImport").files[0]; $("projImport").value = ""; if (!f) return;
+  try {
+    const j = JSON.parse(await f.text()), arr = Array.isArray(j) ? j : j.projects;
+    if (!Array.isArray(arr)) throw 0;
+    let n = 0, last = null;
+    for (const x of arr) if (x && x.data && !x.deleted) { last = addProject(String(x.name || t("pDefault")).slice(0, 80), x.data); n++; }
+    if (!n) throw 0;
+    persist(); switchTo(last); schedule(100); alert(t("pImported")(n));
+  } catch (e) { alert(t("pBadFile")); }
+};
+$("histBox").addEventListener("toggle", async () => {
+  if (!$("histBox").open) return;
+  const ul = $("histList"); ul.replaceChildren();
+  try {
+    const hs = await api("GET", "/projects/" + PID + "/history");
+    if (!hs.length) { ul.innerHTML = `<li>${t("pNoHist")}</li>`; return; }
+    const fmt = new Intl.DateTimeFormat(LANG === "en" ? "en-GB" : "fr-FR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
+    for (const h of hs) {
+      const li = document.createElement("li"), b = document.createElement("button"), d = migrate(h.data);
+      li.append(`${fmt.format(new Date(h.ts))} · ${dt(compute(d).profit, 0)}`, b);
+      b.textContent = t("pRestore"); b.onclick = () => { S = d; save(); fill(); render(); $("histBox").open = false; };
+      ul.appendChild(li);
+    }
+  } catch (e) { ul.innerHTML = `<li>${t("sPending")}</li>`; }
+});
+const isEmpty = () => S.price === 0 && S.cost === 0 && S.leads === 0;
+
+// ---------------- formatting
+const nf = (d) => new Intl.NumberFormat(LANG === "en" ? "en-US" : "fr-FR", { minimumFractionDigits: d, maximumFractionDigits: d });
+const dt = (v, d) => { const a = Math.abs(v), dd = d ?? (a >= 1000 ? 0 : a >= 100 ? 1 : 2); return (v < 0 ? "−" : "") + nf(dd).format(a) + " " + t("cur"); };
+const pc = (v) => nf(0).format(v) + " %";
+const num = (v) => nf(0).format(v);
+
+// ---------------- the model (delivered parcels are entered as a count)
+function compute(s) {
+  const leads = Math.max(0, s.leads);
+  const confirmed = clamp(s.confN, 0, leads), confRate = leads > 0 ? confirmed / leads * 100 : 0, delivered = clamp(s.delivN, 0, confirmed), returned = confirmed - delivered;
+  const delivRate = confirmed > 0 ? delivered / confirmed * 100 : 0;
+  const collectedPer = s.price + (s.clientPays ? s.ship : 0);
+  const revenue = delivered * s.price;
+  const product = delivered * s.cost;
+  const packaging = confirmed * s.pack;
+  const shipping = s.clientPays ? 0 : delivered * s.ship;
+  const returns = returned * s.ret;
+  const wht = s.wht ? 0.03 * delivered * collectedPer : 0;
+  const ads = s.cur === "usd" ? s.ads * s.rate : s.ads;
+  const fixed = s.fixed;
+  const beforeAds = revenue - product - packaging - shipping - returns - wht - fixed;
+  const profit = beforeAds - ads;
+  const per = (v) => (delivered > 0 ? v / delivered : 0);
+  const unitMargin = s.price - s.cost;
+  const grossPct = s.price > 0 ? unitMargin / s.price * 100 : 0;
+  const cpaDelivered = per(ads), cpl = leads > 0 ? ads / leads : 0;
+  const maxCpa = per(beforeAds), maxCpl = leads > 0 ? beforeAds / leads : 0;
+  const roas = ads > 0 ? revenue / ads : Infinity;
+  const pFactor = delivered * (1 - (s.wht ? 0.03 : 0));
+  const otherCosts = product + packaging + shipping + returns + (s.wht && s.clientPays ? 0.03 * delivered * s.ship : 0) + fixed + ads;
+  const minPrice = pFactor > 0 ? otherCosts / pFactor : 0;
+  return { leads, confirmed, confRate, delivered, returned, delivRate, revenue, product, packaging, shipping, returns, wht, ads, fixed, beforeAds, profit, per,
+    unitMargin, grossPct, cpaDelivered, cpl, maxCpa, maxCpl, roas, minPrice, netPct: revenue > 0 ? profit / revenue * 100 : 0 };
+}
+function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+
+// ---------------- verdict and judgments (indicative thresholds for cash on delivery in Tunisia)
+const grade = {
+  gross: (v) => (v >= 55 ? "good" : v >= 40 ? "warn" : "bad"),
+  conf: (v) => (v >= 70 ? "good" : v >= 50 ? "warn" : "bad"),
+  deliv: (v) => (v >= 80 ? "good" : v >= 65 ? "warn" : "bad"),
+  cpa: (cpa, max) => (max <= 0 ? "bad" : cpa <= 0.6 * max ? "good" : cpa <= max ? "warn" : "bad"),
+  roas: (v) => (v >= 4 ? "good" : v >= 2.5 ? "warn" : "bad"),
+  net: (p, pct) => (p <= 0 ? "bad" : pct >= 15 ? "good" : "warn"),
+};
+function render() {
+  const r = compute(S);
+  $("confSub").textContent = S.confN > r.leads + 1e-9 ? t("confOver")(num(r.leads)) : t("confSub")(num(r.leads), pc(r.confRate));
+  $("confSub").style.color = S.confN > r.leads + 1e-9 ? "var(--bad)" : "";
+  $("delivSub").textContent = S.delivN > r.confirmed + 1e-9 ? t("delivOver")(num(r.confirmed)) : t("delivSub")(num(r.confirmed), pc(r.delivRate));
+  $("delivSub").style.color = S.delivN > r.confirmed + 1e-9 ? "var(--bad)" : "";
+  const g = grade.net(r.profit, r.netPct);
+  $("verdict").className = "card " + g;
+  $("vPill").className = "pill " + g;
+  $("vPill").textContent = t(g === "good" ? "pGood" : g === "warn" ? "pWarn" : "pBad");
+  $("vProfit").textContent = dt(r.profit, 0);
+  $("vProfit").style.color = r.profit < 0 ? "var(--bad)" : g === "good" ? "var(--good)" : "var(--ink)";
+  $("vLine").innerHTML = r.delivered > 0 ? t("vLine")(dt(r.per(r.profit)), pc(r.netPct), dt(r.revenue, 0)) : t("vNone");
+  const k = [
+    [t("kMargin"), pc(r.grossPct), grade.gross(r.grossPct), t("perPiece")(dt(r.unitMargin))],
+    [t("kConf"), pc(r.confRate), grade.conf(r.confRate), t("of")(num(r.confirmed), num(r.leads))],
+    [t("kDeliv"), pc(r.delivRate), grade.deliv(r.delivRate), t("returns")(num(r.returned))],
+    [t("kCpa"), dt(r.cpaDelivered), grade.cpa(r.cpaDelivered, r.maxCpa), t("limit")(dt(Math.max(0, r.maxCpa)))],
+    [t("kRoas"), isFinite(r.roas) ? nf(1).format(r.roas) + "×" : t("noAds"), isFinite(r.roas) ? grade.roas(r.roas) : "good", t("roasSub")],
+    [t("kMin"), dt(r.minPrice), S.price >= r.minPrice * 1.15 ? "good" : S.price >= r.minPrice ? "warn" : "bad", t("minSub")],
+  ];
+  $("kpis").innerHTML = k.map(([l, v, c, s]) => `<div class="kpi ${c}"><small>${l}</small><b>${v}</b><span>${s}</span></div>`).join("");
+  $("barProfit").textContent = dt(r.profit, 0) + (r.delivered > 0 ? "  ·  " + nf(0).format(r.per(r.profit)) + " " + t("cur") + t("perCmd") : "");
+  $("barDot").style.background = g === "good" ? "var(--good)" : g === "warn" ? "var(--warn)" : "var(--bad)";
+  drawWaterfall(r); drawFunnel(r); drawLimits(r); drawSens(); renderAdvice(r); updateContact(r);
+  if (isEmpty()) {
+    $("verdict").className = "card"; $("vPill").className = "pill"; $("vPill").textContent = t("pEmpty");
+    $("vProfit").style.color = "var(--muted)"; $("vLine").textContent = t("vEmpty"); $("kpis").innerHTML = "";
+    $("barDot").style.background = "var(--muted)"; $("advice").innerHTML = `<li>${t("aEmpty")}</li>`;
+  }
+  renderJournal();
+}
+
+// ---------------- charts (hand-drawn SVG, theme colours via CSS variables)
+const svgNS = "http://www.w3.org/2000/svg";
+function el(tag, attrs, text) { const e = document.createElementNS(svgNS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; return e; }
+function drawWaterfall(r) {
+  const svg = $("wf"); svg.replaceChildren();
+  const W = Math.max(280, Math.round(svg.parentElement.clientWidth - 36)), narrow = W < 560;
+  const H = 300, L = 8, R = 8, T = 22, B = 46, p = r.per, n = t("wf");
+  const steps = [[n[0], S.price, "start"], [n[1], -p(r.product)], [n[2], -p(r.packaging)], [n[3], -p(r.shipping)],
+    [n[4], -p(r.returns)], [n[5], -p(r.wht)], [n[6], -p(r.ads)], [n[7], -p(r.fixed)], [n[8], p(r.profit), "end"]]
+    .filter((s) => s[2] || Math.abs(s[1]) >= 0.005);
+  let run = 0; const bars = steps.map(([name, v, kind]) => {
+    if (kind === "start") { run = v; return { name, a: 0, b: v, v, kind }; }
+    if (kind === "end") return { name, a: 0, b: v, v, kind };
+    const a = run; run += v; return { name, a, b: run, v, kind: "cost" };
+  });
+  if (narrow) return drawWaterfallH(svg, bars, W);
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const lo = Math.min(0, ...bars.map((b) => Math.min(b.a, b.b))), hi = Math.max(...bars.map((b) => Math.max(b.a, b.b)), 1);
+  const y = (v) => T + (hi - v) / (hi - lo) * (H - T - B);
+  const bw = (W - L - R) / bars.length, gap = Math.min(14, bw * 0.28);
+  svg.appendChild(el("line", { x1: L, x2: W - R, y1: y(0), y2: y(0), stroke: "var(--line)", "stroke-width": 1.5 }));
+  bars.forEach((b, i) => {
+    const x = L + i * bw + gap / 2, w = bw - gap, top = y(Math.max(b.a, b.b)), h = Math.max(1.5, Math.abs(y(b.a) - y(b.b)));
+    const fill = b.kind === "start" ? "var(--blue)" : b.kind === "end" ? (b.v >= 0 ? "var(--good)" : "var(--bad)") : "var(--cost)";
+    svg.appendChild(el("rect", { x, y: top, width: w, height: h, rx: 4, fill }));
+    if (i < bars.length - 1 && b.kind !== "end") svg.appendChild(el("line", { x1: x + w, x2: x + w + gap, y1: y(b.b), y2: y(b.b), stroke: "var(--muted)", "stroke-dasharray": "3 3" }));
+    const val = (b.kind === "cost" || b.v < 0 ? "−" : "") + nf(Math.abs(b.v) >= 10 ? 1 : 2).format(Math.abs(b.v));
+    svg.appendChild(el("text", { x: x + w / 2, y: top - 6, "text-anchor": "middle", class: "lbl" }, val));
+    b.name.split(" ").forEach((wd, j) => svg.appendChild(el("text", { x: x + w / 2, y: H - B + 18 + j * 13, "text-anchor": "middle" }, wd)));
+  });
+}
+function drawWaterfallH(svg, bars, W) {
+  const lab = 96, valW = 58, rowH = 30, T = 6, H = T + bars.length * rowH + 4;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const lo = Math.min(0, ...bars.map((b) => Math.min(b.a, b.b))), hi = Math.max(...bars.map((b) => Math.max(b.a, b.b)), 1);
+  const x = (v) => lab + (v - lo) / (hi - lo) * (W - lab - valW);
+  svg.appendChild(el("line", { x1: x(0), x2: x(0), y1: T, y2: H - 4, stroke: "var(--line)", "stroke-width": 1.5 }));
+  bars.forEach((b, i) => {
+    const y = T + i * rowH, x1 = x(Math.min(b.a, b.b)), w = Math.max(2, Math.abs(x(b.a) - x(b.b)));
+    const fill = b.kind === "start" ? "var(--blue)" : b.kind === "end" ? (b.v >= 0 ? "var(--good)" : "var(--bad)") : "var(--cost)";
+    svg.appendChild(el("text", { x: 0, y: y + rowH / 2 + 2, class: b.kind === "cost" ? "" : "lbl" }, b.name));
+    svg.appendChild(el("rect", { x: x1, y: y + 5, width: w, height: rowH - 12, rx: 4, fill }));
+    if (i < bars.length - 1 && b.kind !== "end") svg.appendChild(el("line", { x1: x(b.b), x2: x(b.b), y1: y + rowH - 7, y2: y + rowH + 5, stroke: "var(--muted)", "stroke-dasharray": "2 2" }));
+    const val = (b.kind === "cost" || b.v < 0 ? "−" : "") + nf(Math.abs(b.v) >= 10 ? 1 : 2).format(Math.abs(b.v));
+    svg.appendChild(el("text", { x: W - 2, y: y + rowH / 2 + 2, "text-anchor": "end", class: "lbl" }, val));
+  });
+}
+function drawFunnel(r) {
+  const svg = $("fun"); svg.replaceChildren(); const n = t("fun");
+  const rows = [[n[0], r.leads, "var(--blue-deep)"], [n[1], r.confirmed, "var(--blue)"], [n[2], r.delivered, "var(--accent)"]];
+  const max = Math.max(1, r.leads), W = 320, bh = 34, gap = 30;
+  rows.forEach(([name, v, c], i) => {
+    const y = 18 + i * (bh + gap), w = Math.max(4, W * v / max);
+    svg.appendChild(el("text", { x: 0, y: y - 6, class: "lbl" }, `${name}: ${num(v)}`));
+    svg.appendChild(el("rect", { x: 0, y, width: W, height: bh, rx: 6, fill: "var(--soft)" }));
+    svg.appendChild(el("rect", { x: 0, y, width: w, height: bh, rx: 6, fill: c }));
+    if (i > 0) svg.appendChild(el("text", { x: W - 6, y: y + bh / 2 + 4, "text-anchor": "end", class: "lbl" }, pc(r.leads ? v / r.leads * 100 : 0)));
+  });
+}
+function drawLimits(r) {
+  const n = t("lim");
+  $("limits").innerHTML = [
+    [n[0], dt(Math.max(0, r.maxCpa)), t("youPay")(dt(r.cpaDelivered))],
+    [n[1], dt(Math.max(0, r.maxCpl)), t("youPay")(dt(r.cpl))],
+    [n[2], dt(r.minPrice), t("youSell")(dt(S.price))],
+  ].map(([l, v, s]) => `<div class="limit"><small>${l}</small><b class="num">${v}</b><small>${s}</small></div>`).join("");
+}
+// sensitivity: delivery is varied as a rate and turned back into a parcel count
+const SENS = {
+  deliv: { min: 30, max: 100, unit: "%", get: () => compute(S).delivRate, set: (s, v) => ({ ...s, delivN: compute(s).confirmed * v / 100 }) },
+  conf: { min: 20, max: 100, unit: "%", get: () => compute(S).confRate, set: (s, v) => { const r = compute(s).delivRate; return { ...s, confN: s.leads * v / 100, delivN: s.leads * v / 100 * r / 100 }; } },
+  cpa: { min: 0, max: null, unit: "", get: () => S.ads, set: (s, v) => ({ ...s, ads: v }) },
+  price: { min: null, max: null, unit: "cur", get: () => S.price, set: (s, v) => ({ ...s, price: v }) },
+};
+function drawSens() {
+  const svg = $("sens"); svg.replaceChildren();
+  const d = SENS[sensVar], cur = d.get();
+  const min = d.min ?? Math.max(0, Math.round(cur * 0.5)), max = d.max ?? Math.max(1, Math.round(cur * (sensVar === "cpa" ? 2.5 : 1.6)));
+  const N = 60, pts = [];
+  for (let i = 0; i <= N; i++) { const v = min + (max - min) * i / N; pts.push([v, compute(d.set(S, v)).profit]); }
+  const W = Math.max(280, Math.round(svg.parentElement.clientWidth - 36)), H = W < 560 ? 220 : 260, L = 50, R = 12, T = 14, B = 32;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const lo = Math.min(0, ...pts.map((p) => p[1])), hi = Math.max(0, ...pts.map((p) => p[1]));
+  const pad = (hi - lo) * 0.08 || 1, y0 = lo - pad, y1 = hi + pad;
+  const X = (v) => L + (v - min) / (max - min) * (W - L - R), Y = (p) => T + (y1 - p) / (y1 - y0) * (H - T - B);
+  for (let i = 0; i <= 4; i++) { const v = y0 + (y1 - y0) * i / 4, yy = Y(v);
+    svg.appendChild(el("line", { x1: L, x2: W - R, y1: yy, y2: yy, stroke: "var(--line)" }));
+    svg.appendChild(el("text", { x: L - 6, y: yy + 4, "text-anchor": "end" }, nf(0).format(v))); }
+  const nt = W < 560 ? 3 : 5;
+  for (let i = 0; i <= nt; i++) { const v = min + (max - min) * i / nt;
+    svg.appendChild(el("text", { x: X(v), y: H - 10, "text-anchor": "middle" }, nf(0).format(v) + (d.unit === "%" ? "%" : ""))); }
+  svg.appendChild(el("line", { x1: L, x2: W - R, y1: Y(0), y2: Y(0), stroke: "var(--muted)", "stroke-width": 1.5 }));
+  const clipId = "c" + Math.random().toString(36).slice(2, 7), defs = el("defs", {});
+  const cpU = el("clipPath", { id: clipId + "u" }); cpU.appendChild(el("rect", { x: L, y: T, width: W - L - R, height: Math.max(0, Y(0) - T) }));
+  const cpD = el("clipPath", { id: clipId + "d" }); cpD.appendChild(el("rect", { x: L, y: Y(0), width: W - L - R, height: Math.max(0, H - B - Y(0)) }));
+  defs.append(cpU, cpD); svg.appendChild(defs);
+  const line = pts.map((p, i) => `${i ? "L" : "M"}${X(p[0]).toFixed(1)},${Y(p[1]).toFixed(1)}`).join("");
+  const area = `${line}L${X(max)},${Y(0)}L${X(min)},${Y(0)}Z`;
+  svg.appendChild(el("path", { d: area, fill: "var(--good)", opacity: 0.18, "clip-path": `url(#${clipId}u)` }));
+  svg.appendChild(el("path", { d: area, fill: "var(--bad)", opacity: 0.18, "clip-path": `url(#${clipId}d)` }));
+  svg.appendChild(el("path", { d: line, fill: "none", stroke: "var(--good)", "stroke-width": 3, "clip-path": `url(#${clipId}u)` }));
+  svg.appendChild(el("path", { d: line, fill: "none", stroke: "var(--bad)", "stroke-width": 3, "clip-path": `url(#${clipId}d)` }));
+  let be = null; for (let i = 1; i < pts.length; i++) { const [a, pa] = pts[i - 1], [b, pb] = pts[i]; if ((pa < 0) !== (pb < 0)) { be = a + (b - a) * (-pa) / (pb - pa); break; } }
+  if (be != null) { svg.appendChild(el("circle", { cx: X(be), cy: Y(0), r: 5, fill: "var(--paper)", stroke: "var(--muted)", "stroke-width": 2 }));
+    svg.appendChild(el("text", { x: Math.max(L + 34, X(be)), y: Y(0) - 10, "text-anchor": "middle", class: "lbl" }, t("seuil") + " " + nf(sensVar === "price" ? 1 : 0).format(be) + (d.unit === "%" ? "%" : d.unit === "cur" ? " " + t("cur") : ""))); }
+  const curP = compute(S).profit;
+  if (cur >= min && cur <= max) { svg.appendChild(el("line", { x1: X(cur), x2: X(cur), y1: T, y2: H - B, stroke: "var(--blue)", "stroke-dasharray": "4 4" }));
+    svg.appendChild(el("circle", { cx: X(cur), cy: Y(curP), r: 6, fill: "var(--blue)" }));
+    const right = X(cur) > W * 0.7;
+    svg.appendChild(el("text", { x: X(cur) + (right ? -10 : 10), y: Y(curP) - 10, "text-anchor": right ? "end" : "start", class: "lbl" }, t("you") + ": " + dt(curP, 0))); }
+  const unit = sensVar === "cpa" ? (S.cur === "usd" ? "$" : t("cur")) : "";
+  $("sensHint").textContent = t("sensHint")(t("sNames")[sensVar], unit);
+}
+
+// ---------------- advice
+function renderAdvice(r) {
+  const a = [], gm = grade.gross(r.grossPct);
+  a.push([gm, t(gm === "bad" ? "aMarginBad" : gm === "warn" ? "aMarginWarn" : "aMarginGood")(pc(r.grossPct))]);
+  const gc = grade.conf(r.confRate); if (gc !== "good") a.push([gc, t("aConf")(pc(r.confRate))]);
+  const gd = grade.deliv(r.delivRate);
+  if (gd !== "good") a.push([gd, t("aDeliv")(pc(r.delivRate), num(r.returned), dt(r.returns + r.packaging * (r.returned / Math.max(1, r.confirmed)), 0))]);
+  if (r.ads > 0) { const gp = grade.cpa(r.cpaDelivered, r.maxCpa);
+    a.push([gp, t(gp === "bad" ? "aAdsBad" : gp === "warn" ? "aAdsWarn" : "aAdsGood")(dt(r.cpaDelivered), dt(Math.max(0, r.maxCpa)))]); }
+  if (S.wht && r.wht > 0) a.push(["warn", t("aWht")(dt(r.wht, 0))]);
+  if (S.price < r.minPrice) a.push(["bad", t("aMin")(dt(S.price), dt(r.minPrice))]);
+  $("advice").innerHTML = a.map(([c, x]) => `<li class="${c}">${x}</li>`).join("");
+}
+
+// ---------------- contact: the visitor sends their own summary from WhatsApp
+function summary(r) {
+  return t("sum")($("who").value.trim(), { price: dt(S.price), cost: dt(S.cost), pack: dt(S.pack), leads: num(r.leads), conf: num(r.confirmed),
+    deliv: num(r.delivered), ship: dt(S.ship), clientPays: S.clientPays, ret: dt(S.ret), ads: nf(0).format(S.ads) + " " + (S.cur === "usd" ? "$" : t("cur")),
+    wht: S.wht, profit: dt(r.profit, 0), per: dt(r.per(r.profit)) }).join("\n");
+}
+function updateContact(r) {
+  $("contact").hidden = !CONFIG.whatsapp && !CONFIG.instagram;   // shown once a number or link is set in CONFIG
+  const text = encodeURIComponent(summary(r));
+  $("waBtn").href = CONFIG.whatsapp ? `https://wa.me/${CONFIG.whatsapp}?text=${text}` : `https://wa.me/?text=${text}`;
+  if (CONFIG.instagram) { $("igBtn").href = CONFIG.instagram; $("igBtn").hidden = false; } else $("igBtn").hidden = true;
+}
+$("who").addEventListener("input", () => updateContact(compute(S)));
+$("copyLink").onclick = async () => {
+  try { await navigator.clipboard.writeText(summary(compute(S))); $("copyLink").textContent = t("copied"); }
+  catch (e) { $("copyLink").textContent = t("copyFail"); }
+  setTimeout(() => ($("copyLink").textContent = t("copy")), 2000);
+};
+
+
+// ---------------- day-by-day journal: S.J = { "YYYY-MM-DD": { leads, conf, deliv, ret, ads } }
+const pad2 = (n) => String(n).padStart(2, "0");
+const ymd = (d) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+const J_KEYS = ["leads", "conf", "deliv", "ret", "ads"];
+const J_IDS = { leads: "jLeads", conf: "jConf", deliv: "jDeliv", ret: "jRet", ads: "jAds" };
+let jDay = ymd(new Date());
+const locale = () => (LANG === "en" ? "en-GB" : LANG === "ar" ? "ar-TN" : "fr-FR");
+const monthName = (ym) => { const [y, m] = ym.split("-").map(Number); return new Intl.DateTimeFormat(locale(), { month: "long", year: "numeric" }).format(new Date(y, m - 1, 1)); };
+const shortDay = (key) => { const [y, m, d] = key.split("-").map(Number); return new Intl.DateTimeFormat(locale(), { day: "numeric", month: "short" }).format(new Date(y, m - 1, d)); };
+function dayMoney(s, e) {   // money of one day, with the product's prices and fees
+  const collected = s.price + (s.clientPays ? s.ship : 0);
+  const revenue = e.deliv * s.price, product = e.deliv * s.cost, packaging = e.conf * s.pack;
+  const shipping = s.clientPays ? 0 : e.deliv * s.ship, returns = e.ret * s.ret;
+  const wht = s.wht ? 0.03 * e.deliv * collected : 0, ads = s.cur === "usd" ? e.ads * s.rate : e.ads;
+  return { revenue, product, packaging, shipping, returns, wht, ads, profit: revenue - product - packaging - shipping - returns - wht - ads };
+}
+function monthOf(s, ym, skip) {
+  const J = s.J || {}, [y, m] = ym.split("-").map(Number), n = new Date(y, m, 0).getDate();
+  const tot = { leads: 0, conf: 0, deliv: 0, ret: 0, ads: 0, revenue: 0, product: 0, packaging: 0, shipping: 0, returns: 0, wht: 0, adsDt: 0, profit: 0 };
+  const days = []; let filled = 0, first = 0;
+  for (let d = 1; d <= n; d++) {
+    const key = `${ym}-${pad2(d)}`, e = J[key];
+    if (!e || key === skip) { days.push({ key, d, e: null, m: null }); continue; }
+    const mm = dayMoney(s, e); filled++; if (!first) first = d;
+    for (const k of J_KEYS) tot[k] += e[k];
+    for (const k of ["revenue", "product", "packaging", "shipping", "returns", "wht", "profit"]) tot[k] += mm[k];
+    tot.adsDt += mm.ads;
+    days.push({ key, d, e, m: mm });
+  }
+  const any = Object.keys(J).some((k) => k.startsWith(ym));
+  const net = tot.profit - (any ? s.fixed : 0);
+  let proj = null; const today = new Date();
+  if (filled && ym === ymd(today).slice(0, 7)) { const span = Math.max(1, today.getDate() - first + 1); proj = tot.profit / span * (n - first + 1) - s.fixed; }
+  return { days, tot, net, n, filled, proj, any };
+}
+const signed = (v) => (v > 0 ? "+" : "") + dt(v, 0);
+function fillJournal() {
+  const e = S.J[jDay];
+  for (const k of J_KEYS) if (document.activeElement !== $(J_IDS[k])) $(J_IDS[k]).value = e ? show(e[k]) : "";
+  if (document.activeElement !== $("jDate")) $("jDate").value = jDay;
+}
+function renderJournal() {
+  const ym = jDay.slice(0, 7), mo = monthOf(S, ym), without = monthOf(S, ym, jDay), e = S.J[jDay];
+  $("mLabel").textContent = monthName(ym);
+  $("jAdsCur").textContent = S.cur === "usd" ? "$" : t("cur");
+  fillJournal();
+  // the day, the month, the month end
+  let dayHtml;
+  if (e) {
+    const p = dayMoney(S, e).profit, avg = without.filled ? without.tot.profit / without.filled : null;
+    dayHtml = `<div class="jstat"><small>${t("jToday")(shortDay(jDay))}</small><b class="${p >= 0 ? "good" : "bad"}">${signed(p)}</b><span>${avg == null ? t("jFirst")
+      : `<span class="${p >= avg ? "up" : "down"}">${t("jVsAvg")(dt(Math.abs(p - avg), 0), p >= avg)}</span>`}</span></div>`;
+  } else dayHtml = `<div class="jstat"><small>${t("jToday")(shortDay(jDay))}</small><b>—</b><span>${t("jNoDay")}</span></div>`;
+  const monthHtml = mo.any
+    ? `<div class="jstat"><small>${t("jMonth")}</small><b class="${mo.net >= 0 ? "good" : "bad"}">${dt(mo.net, 0)}</b><span>${e ? t("jWithout")(dt(without.net, 0)) : ""}${S.fixed ? (e ? " · " : "") + t("jFixed")(dt(S.fixed, 0)) : ""}</span></div>`
+    : `<div class="jstat"><small>${t("jMonth")}</small><b>—</b><span>${t("jEmpty")}</span></div>`;
+  const projHtml = mo.proj != null
+    ? `<div class="jstat"><small>${t("jProj")}</small><b class="${mo.proj >= 0 ? "good" : "bad"}">${dt(mo.proj, 0)}</b><span>${t("jProjSub")}</span></div>`
+    : `<div class="jstat"><small>${t("jProj")}</small><b>—</b><span>${mo.any ? t("jProjPast") : ""}</span></div>`;
+  $("jRes").innerHTML = dayHtml + monthHtml + projHtml;
+  drawJournal(mo);
+  // month totals
+  const T_ = mo.tot;
+  $("jTotals").innerHTML = mo.any ? [
+    [t("leads"), num(T_.leads), ""],
+    [t("confN"), num(T_.conf), T_.leads ? t("jRate")(pc(T_.conf / T_.leads * 100)) : ""],
+    [t("delivN"), num(T_.deliv), T_.conf ? t("jRate")(pc(T_.deliv / T_.conf * 100)) : ""],
+    [t("jRet"), num(T_.ret), ""],
+    [t("jAdsM"), dt(T_.adsDt, 0), ""],
+    [t("jRev"), dt(T_.revenue, 0), ""],
+  ].map(([l, v, s]) => `<div class="kpi"><small>${l}</small><b>${v}</b><span>${s}</span></div>`).join("") : "";
+  const list = Object.values(P);
+  if (list.length > 1) {
+    let all = 0; for (const x of list) { const s = x.id === PID ? S : migrate(x.data); const m = monthOf(s, ym); if (m.any) all += m.net; }
+    $("jAll").textContent = t("jAll")(dt(all, 0), list.length); $("jAll").hidden = false;
+  } else $("jAll").hidden = true;
+  $("jUse").disabled = !mo.any;
+}
+function drawJournal(mo) {
+  const svg = $("jChart"); svg.replaceChildren();
+  const W = Math.max(280, Math.round(svg.parentElement.clientWidth - 36)), H = W < 560 ? 190 : 220, L = 8, R = 8, T = 18, B = 24;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const vals = mo.days.map((d) => (d.m ? d.m.profit : 0));
+  let run = 0; const cum = mo.days.map((d) => (run += d.m ? d.m.profit : 0));
+  const lo = Math.min(0, ...vals), hi = Math.max(0, ...vals), span = hi - lo || 1;
+  const y = (v) => T + (hi - v) / span * (H - T - B);
+  const clo = Math.min(0, ...cum), chi = Math.max(0, ...cum), cspan = chi - clo || 1;
+  const yc = (v) => T + (chi - v) / cspan * (H - T - B);
+  const bw = (W - L - R) / mo.n;
+  svg.appendChild(el("line", { x1: L, x2: W - R, y1: y(0), y2: y(0), stroke: "var(--line)", "stroke-width": 1.5 }));
+  mo.days.forEach((d, i) => {
+    const x = L + i * bw, v = vals[i], sel = d.key === jDay;
+    if (d.m) svg.appendChild(el("rect", { x: x + bw * 0.15, y: Math.min(y(v), y(0)), width: Math.max(2, bw * 0.7), height: Math.max(2, Math.abs(y(v) - y(0))), rx: 2,
+      fill: v >= 0 ? "var(--good)" : "var(--bad)", opacity: sel ? 1 : 0.75 }));
+    if (sel) svg.appendChild(el("rect", { x: x + 1, y: T - 4, width: bw - 2, height: H - T - B + 8, rx: 4, fill: "none", stroke: "var(--ink)", "stroke-width": 1.5 }));
+    if (d.d === 1 || d.d % 5 === 0 || sel) svg.appendChild(el("text", { x: x + bw / 2, y: H - 6, "text-anchor": "middle", class: sel ? "lbl" : "" }, String(d.d)));
+    const hit = el("rect", { x, y: 0, width: bw, height: H, class: "hit" }); hit.addEventListener("click", () => { jDay = d.key; renderJournal(); }); svg.appendChild(hit);
+  });
+  if (mo.filled) {
+    const lastIdx = mo.days.reduce((a, d, i) => (d.e ? i : a), 0);
+    const path = cum.slice(0, lastIdx + 1).map((v, i) => `${i ? "L" : "M"}${(L + i * bw + bw / 2).toFixed(1)},${yc(v).toFixed(1)}`).join("");
+    svg.appendChild(el("path", { d: path, fill: "none", stroke: "var(--blue)", "stroke-width": 2.5, "pointer-events": "none" }));
+    const lx = L + lastIdx * bw + bw / 2, right = lx > W * 0.7;
+    svg.appendChild(el("text", { x: lx + (right ? -6 : 6), y: Math.max(T + 2, yc(cum[lastIdx]) - 8), "text-anchor": right ? "end" : "start", class: "lbl" }, dt(cum[lastIdx], 0)));
+  }
+}
+J_KEYS.forEach((k) => $(J_IDS[k]).addEventListener("input", () => {
+  const e = { ...(S.J[jDay] || { leads: 0, conf: 0, deliv: 0, ret: 0, ads: 0 }) };
+  e[k] = Math.max(0, parseNum($(J_IDS[k]).value));
+  const J = { ...S.J }; if (J_KEYS.every((x) => !e[x])) delete J[jDay]; else J[jDay] = e;
+  S.J = J; save(); renderJournal();
+}));
+J_KEYS.forEach((k) => $(J_IDS[k]).addEventListener("blur", fillJournal));
+$("jDate").addEventListener("change", () => { if (/^\d{4}-\d{2}-\d{2}$/.test($("jDate").value)) { jDay = $("jDate").value; renderJournal(); } });
+function shiftMonth(n) {
+  const [y, m] = jDay.split("-").map(Number), d = new Date(y, m - 1 + n, 1), today = new Date();
+  jDay = ymd(d).slice(0, 7) === ymd(today).slice(0, 7) ? ymd(today) : ymd(d); renderJournal();
+}
+$("mPrev").onclick = () => shiftMonth(-1);
+$("mNext").onclick = () => shiftMonth(1);
+$("jUse").onclick = () => {
+  const T_ = monthOf(S, jDay.slice(0, 7)).tot;
+  Object.assign(S, { leads: T_.leads, confN: T_.conf, delivN: T_.deliv, ads: T_.ads });
+  save(); fill(); render(); $("verdict").scrollIntoView({ behavior: "smooth", block: "start" });
+};
+
+// ---------------- report: CSV for Excel / Google Sheets (all products, selected month)
+function reportRows() {
+  const ym = jDay.slice(0, 7), dec = LANG === "en" ? "." : ",";
+  const n2 = (v) => (Math.round(v * 100) / 100).toFixed(2).replace(".", dec);
+  const p1 = (a, b) => (b ? (Math.round(a / b * 1000) / 10).toFixed(1).replace(".", dec) + "%" : "");
+  const rows = [[t("csvTitle")(monthName(ym))], [], t("csvHead")], sums = [];
+  const list = Object.values(P).sort((a, b) => a.name.localeCompare(b.name));
+  for (const x of list) {
+    const s = x.id === PID ? S : migrate(x.data), mo = monthOf(s, ym);
+    for (const d of mo.days) if (d.e) rows.push([d.key, x.name, d.e.leads, d.e.conf, d.e.deliv, d.e.ret, n2(d.m.ads), n2(d.m.revenue), n2(d.m.product),
+      n2(d.m.packaging), n2(d.m.shipping), n2(d.m.returns), n2(d.m.wht), n2(d.m.profit)]);
+    if (mo.any) sums.push([x, s, mo]);
+  }
+  rows.push([], [t("csvSummary")], t("csvSumHead"));
+  let grand = 0;
+  for (const [x, s, mo] of sums) { const T_ = mo.tot; grand += mo.net;
+    rows.push([x.name, T_.leads, T_.conf, p1(T_.conf, T_.leads), T_.deliv, p1(T_.deliv, T_.conf), T_.ret, n2(T_.revenue), n2(T_.adsDt), n2(T_.profit), n2(s.fixed), n2(mo.net)]); }
+  rows.push([t("csvTotal"), "", "", "", "", "", "", "", "", "", "", n2(grand)]);
+  const r = compute(S), names = t("csvSimRows");
+  rows.push([], [t("csvSim")(P[PID].name)],
+    [names[0], n2(S.price)], [names[1], n2(S.cost)], [names[2], p1(r.unitMargin, S.price)],
+    [names[3], n2(r.profit)], [names[4], n2(Math.max(0, r.maxCpa))], [names[5], n2(r.minPrice)]);
+  return rows;
+}
+function reportText(sep) {
+  const q = (v) => { v = String(v); return v.includes(sep) || /["\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v; };
+  return reportRows().map((r) => r.map(q).join(sep)).join("\r\n");
+}
+$("jCsv").onclick = () => {
+  const blob = new Blob(["﻿" + reportText(LANG === "en" ? "," : ";")], { type: "text/csv;charset=utf-8" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `rapport-${jDay.slice(0, 7)}.csv`;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+};
+$("jCopy").onclick = async () => {
+  try { await navigator.clipboard.writeText(reportText("\t")); $("jCopy").textContent = t("jCopied"); }
+  catch (e) { $("jCopy").textContent = t("copyFail"); }
+  setTimeout(() => ($("jCopy").textContent = t("jCopy")), 2500);
+};
+
+// ---------------- installable app (works offline, keeps the data on the device)
+let installEvt = null;
+const standalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+const onWeb = location.protocol.startsWith("http") && window.self === window.top;
+if (onWeb && "serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); installEvt = e; if (!standalone()) $("installBtn").hidden = false; });
+addEventListener("appinstalled", () => { $("installBtn").hidden = true; installEvt = null; });
+$("installBtn").onclick = async () => { if (!installEvt) return; installEvt.prompt(); await installEvt.userChoice.catch(() => {}); installEvt = null; $("installBtn").hidden = true; };
+if (onWeb && !standalone() && /iphone|ipad|ipod/i.test(navigator.userAgent) && !LS.get("rbe7-ios-hint-closed", false)) $("iosHint").hidden = false;
+$("iosClose").onclick = () => { $("iosHint").hidden = true; LS.set("rbe7-ios-hint-closed", true); };
+let persistAsked = false;
+function askPersist() { if (persistAsked) return; persistAsked = true; try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch (e) {} }
+
+// ---------------- language
+function applyLang() {
+  const rtl = LANG === "ar";
+  document.querySelectorAll(".chart").forEach((s) => s.classList.toggle("ar", rtl));
+  ["app", "bar"].forEach((id) => { $(id).setAttribute("dir", rtl ? "rtl" : "ltr"); $(id).setAttribute("lang", LANG); });
+  document.querySelectorAll("[data-t]").forEach((e) => { const v = t(e.dataset.t); if (typeof v === "string") e.textContent = v; });
+  $("who").placeholder = t("cPh");
+  document.querySelectorAll("[data-lang]").forEach((b) => b.classList.toggle("on", b.dataset.lang === LANG));
+  if ($("dataDir").dataset.dir) $("dataDir").textContent = t("pDir")($("dataDir").dataset.dir);
+  fill(); render(); renderProjects(); setState();
+}
+document.querySelectorAll("[data-lang]").forEach((b) => b.onclick = () => { LANG = b.dataset.lang; try { localStorage.setItem("rbe7-lang", LANG); } catch (e) {} applyLang(); });
+
+// ---------------- inputs wiring
+function parseNum(v) { const n = parseFloat(String(v).replace(/\s/g, "").replace(",", ".")); return isFinite(n) ? n : 0; }
+const show = (v) => { const r = Math.round(v * 100) / 100; return LANG === "en" ? String(r) : String(r).replace(".", ","); };
+function fill() {
+  NUM.forEach((k) => { if (document.activeElement !== $(k)) $(k).value = show(S[k]); });
+  $("clientPays").checked = S.clientPays; $("wht").checked = S.wht;
+  $("curUsd").classList.toggle("on", S.cur === "usd"); $("curDt").classList.toggle("on", S.cur === "dt");
+  $("adsCur").textContent = S.cur === "usd" ? "$" : t("cur"); $("rateRow").hidden = S.cur !== "usd";
+}
+NUM.forEach((k) => $(k).addEventListener("input", () => { S[k] = Math.max(0, parseNum($(k).value)); save(); render(); }));
+NUM.forEach((k) => $(k).addEventListener("blur", fill));
+$("clientPays").onchange = () => { S.clientPays = $("clientPays").checked; save(); render(); };
+$("wht").onchange = () => { S.wht = $("wht").checked; save(); render(); };
+$("curUsd").onclick = () => { if (S.cur !== "usd") { S.ads = +(S.ads / (S.rate || 1)).toFixed(1); S.cur = "usd"; } fill(); save(); render(); };
+$("curDt").onclick = () => { if (S.cur !== "dt") { S.ads = Math.round(S.ads * S.rate); S.cur = "dt"; } fill(); save(); render(); };
+$("reset").onclick = () => { S = { ...EXAMPLE, J: S.J }; save(); fill(); render(); };   // the day-by-day journal is kept
+$("exBtn").onclick = () => { S = { ...DEMO, J: S.J }; save(); fill(); render(); };
+document.querySelectorAll("[data-sens]").forEach((b) => b.onclick = () => { sensVar = b.dataset.sens; document.querySelectorAll("[data-sens]").forEach((x) => x.classList.toggle("on", x === b)); drawSens(); });
+let rz = 0; window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(render, 150); });
+window.__calc = { compute, get S() { return S; }, get P() { return P; }, get DIRTY() { return DIRTY; }, get SERVER() { return SERVER; }, setLang: (l) => { LANG = l; applyLang(); } };
+ensureProject(); persist();
+applyLang();
+if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) connect();
+</script>
+
+</body></html>
