@@ -181,6 +181,99 @@ footer { color: var(--muted); font-size: 12px; }
 [dir="rtl"] .kpi b, [dir="rtl"] .limit b { text-align: right; }
 [dir="rtl"] .chart text { font-family: var(--body); }
 [dir="rtl"] .kpi b, [dir="rtl"] .limit b, [dir="rtl"] #vProfit, [dir="rtl"] .inbox input { unicode-bidi: plaintext; }
+
+/* ---------- spice layer: colour, depth and motion (keeps white / blue / green) */
+:root {
+  --bg: #eef3ff; --soft: #f1f5ff; --line: #dbe4f7; --ink: #0b1736;
+  --blue: #2152e8; --blue-deep: #0f2a7a; --cost: #8fb0f7;
+  --accent: #4ade80; --accent-ink: #052e16;
+  --good: #16a34a; --good-soft: #dcfce7; --warn: #d97706; --warn-soft: #fef3c7; --bad: #dc2626; --bad-soft: #fee2e2;
+  --hero: radial-gradient(120% 140% at 100% 0%, #3b82f6 0%, transparent 55%), linear-gradient(140deg, #0f2a7a 0%, #1d4ed8 55%, #2563eb 100%);
+  --shadow: 0 1px 2px rgb(11 23 54 / .05), 0 12px 30px -10px rgb(33 82 232 / .18);
+  --shadow-lg: 0 2px 4px rgb(11 23 54 / .06), 0 24px 50px -14px rgb(33 82 232 / .38);
+  --chip: linear-gradient(135deg, #dfe8ff, #e6fbee);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #070e1f; --paper: #0f1a33; --soft: #14213f; --line: #22325a; --ink: #eef3fb; --muted: #9aa8c0;
+  --blue: #6b9bff; --blue-deep: #1d3f8f; --cost: #4f74c9; --accent: #4ade80; --accent-ink: #052e16;
+  --good: #4ade80; --good-soft: #0f2d1c; --warn: #fbbf24; --warn-soft: #2d2310; --bad: #f87171; --bad-soft: #34161a;
+  --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 14px 34px -14px rgb(0 0 0 / .7); --shadow-lg: 0 24px 50px -16px rgb(0 0 0 / .8);
+  --chip: linear-gradient(135deg, #1b2b55, #123526); color-scheme: dark; } }
+:root[data-theme="dark"] { --bg: #070e1f; --paper: #0f1a33; --soft: #14213f; --line: #22325a; --ink: #eef3fb; --muted: #9aa8c0;
+  --blue: #6b9bff; --blue-deep: #1d3f8f; --cost: #4f74c9; --accent: #4ade80; --accent-ink: #052e16;
+  --good: #4ade80; --good-soft: #0f2d1c; --warn: #fbbf24; --warn-soft: #2d2310; --bad: #f87171; --bad-soft: #34161a;
+  --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 14px 34px -14px rgb(0 0 0 / .7); --shadow-lg: 0 24px 50px -16px rgb(0 0 0 / .8);
+  --chip: linear-gradient(135deg, #1b2b55, #123526); color-scheme: dark; }
+body { background: var(--bg); }
+.card { border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); }
+/* hero */
+header { background: var(--hero); color: #fff; border-radius: 24px; padding: 16px 20px 24px; position: relative; overflow: hidden; isolation: isolate; box-shadow: var(--shadow-lg); }
+header::before { content: ""; position: absolute; width: 300px; height: 300px; right: -90px; bottom: -150px; border-radius: 50%; background: radial-gradient(circle, rgb(74 222 128 / .55), transparent 65%); z-index: -1; }
+header::after { content: ""; position: absolute; inset: 0; z-index: -1; background-image: radial-gradient(rgb(255 255 255 / .14) 1px, transparent 1px); background-size: 18px 18px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 10%, #000 90%); mask-image: linear-gradient(to bottom, transparent 10%, #000 90%); }
+header h1 { color: #fff; margin-top: 10px; }
+header .lead { color: rgb(255 255 255 / .84); }
+header .seg { border-color: rgb(255 255 255 / .3); background: rgb(255 255 255 / .08); }
+header .seg button { color: #fff; }
+header .seg button.on { background: #fff; color: var(--blue-deep); }
+header #installBtn { background: linear-gradient(135deg, #4ade80, #22c55e); color: #052e16; border: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.chips span { font: 600 12.5px var(--body); color: #fff; background: rgb(255 255 255 / .12); border: 1px solid rgb(255 255 255 / .24); padding: 6px 11px; border-radius: 99px; }
+header .ios-hint { background: rgb(255 255 255 / .12); border-color: rgb(255 255 255 / .25); color: #fff; margin-top: 12px; }
+header .ios-hint button { color: #fff; }
+/* section titles with an icon chip */
+h2[data-ico] { display: flex; align-items: center; gap: 10px; }
+h2[data-ico]::before { content: attr(data-ico); flex: none; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 11px; background: var(--chip); font-size: 18px; box-shadow: inset 0 0 0 1px rgb(33 82 232 / .12); }
+/* verdict: the card takes the colour of the result */
+#verdict { border: 0; color: #fff; background: var(--hero); box-shadow: var(--shadow-lg); position: relative; overflow: hidden; isolation: isolate; }
+#verdict.good { background: radial-gradient(120% 120% at 100% 0%, #86efac 0%, transparent 50%), linear-gradient(140deg, #064e3b 0%, #15803d 55%, #22c55e 100%); box-shadow: 0 24px 50px -16px rgb(22 163 74 / .6); }
+#verdict.warn { background: radial-gradient(120% 120% at 100% 0%, #fde68a 0%, transparent 50%), linear-gradient(140deg, #78350f 0%, #c2410c 50%, #f59e0b 100%); box-shadow: 0 24px 50px -16px rgb(217 119 6 / .6); }
+#verdict.bad { background: radial-gradient(120% 120% at 100% 0%, #fca5a5 0%, transparent 50%), linear-gradient(140deg, #7f1d1d 0%, #b91c1c 55%, #ef4444 100%); box-shadow: 0 24px 50px -16px rgb(220 38 38 / .6); }
+#verdict::after { content: ""; position: absolute; inset: 0; z-index: -1; background-image: radial-gradient(rgb(255 255 255 / .12) 1px, transparent 1px); background-size: 16px 16px; -webkit-mask-image: linear-gradient(200deg, #000, transparent 60%); mask-image: linear-gradient(200deg, #000, transparent 60%); }
+#verdict h2, #verdict #vLine, #verdict #vLine b { color: #fff; }
+#verdict h2::before { background: rgb(255 255 255 / .18); box-shadow: none; }
+#vProfit { color: #fff !important; font-size: clamp(48px, 13vw, 78px); text-shadow: 0 2px 24px rgb(0 0 0 / .18); }
+#verdict .pill, #verdict .pill.good, #verdict .pill.warn, #verdict .pill.bad { background: #fff; color: var(--blue-deep); }
+#verdict .pill.good { color: #15803d; } #verdict .pill.warn { color: #b45309; } #verdict .pill.bad { color: #b91c1c; }
+#verdict .kpi, [dir="rtl"] #verdict .kpi { background: rgb(255 255 255 / .97); color: #0b1736; border: 0; border-top: 4px solid #cbd5e1; border-radius: 14px; box-shadow: 0 8px 18px -10px rgb(0 0 0 / .35); }
+#verdict .kpi small, #verdict .kpi span { color: #5f6b80; }
+#verdict .kpi.good, [dir="rtl"] #verdict .kpi.good { border-top-color: #16a34a; }
+#verdict .kpi.warn, [dir="rtl"] #verdict .kpi.warn { border-top-color: #f59e0b; }
+#verdict .kpi.bad, [dir="rtl"] #verdict .kpi.bad { border-top-color: #dc2626; }
+@keyframes pop { 0% { transform: scale(1); } 35% { transform: scale(1.03); } 100% { transform: scale(1); } }
+#verdict.popped { animation: pop .55s ease; }
+/* buttons and inputs */
+button.btn, a.btn, label.btn { transition: transform .15s, box-shadow .15s, border-color .15s; }
+button.btn:hover, a.btn:hover, label.btn:hover { border-color: var(--blue); transform: translateY(-1px); }
+button.btn:active, a.btn:active, label.btn:active { transform: scale(.98); }
+a.btn.primary, button.btn.primary { background: linear-gradient(135deg, #4ade80, #22c55e); border: 0; color: #052e16; box-shadow: 0 10px 22px -10px rgb(34 197 94 / .8); }
+.inbox { transition: box-shadow .15s, border-color .15s; }
+.inbox:focus-within { border-color: var(--blue); box-shadow: 0 0 0 4px rgb(33 82 232 / .15); background: var(--paper); }
+.slip { border-color: color-mix(in srgb, var(--blue) 25%, var(--line)); background: linear-gradient(180deg, rgb(33 82 232 / .04), transparent 70%); }
+.slip legend { background: var(--blue); color: #fff; padding: 3px 10px; border-radius: 99px; letter-spacing: 1.2px; }
+.projbar select { background: var(--paper); }
+/* day by day */
+.jstat { border: 1px solid var(--line); background: var(--paper); }
+.jstat:has(b.good) { background: linear-gradient(160deg, var(--good-soft), var(--paper) 85%); border-color: color-mix(in srgb, var(--good) 35%, transparent); }
+.jstat:has(b.bad) { background: linear-gradient(160deg, var(--bad-soft), var(--paper) 85%); border-color: color-mix(in srgb, var(--bad) 35%, transparent); }
+#jTotals .kpi { background: var(--paper); border: 1px solid var(--line); border-left: 4px solid var(--blue); }
+[dir="rtl"] #jTotals .kpi { border-left: 1px solid var(--line); border-right: 4px solid var(--blue); }
+/* advice */
+#advice li { background: var(--paper); border: 1px solid var(--line); border-left-width: 4px; }
+#advice li.good { background: linear-gradient(90deg, var(--good-soft), var(--paper) 75%); }
+#advice li.warn { background: linear-gradient(90deg, var(--warn-soft), var(--paper) 75%); }
+#advice li.bad { background: linear-gradient(90deg, var(--bad-soft), var(--paper) 75%); }
+[dir="rtl"] #advice li { border-left-width: 1px; border-right-width: 4px; }
+/* bottom bar follows the result */
+#bar { background: linear-gradient(120deg, #0f2a7a, #1d4ed8); box-shadow: 0 -12px 30px -12px rgb(15 42 122 / .55); border-radius: 18px 18px 0 0; }
+#bar.good { background: linear-gradient(120deg, #064e3b, #16a34a); } #bar.warn { background: linear-gradient(120deg, #78350f, #d97706); } #bar.bad { background: linear-gradient(120deg, #7f1d1d, #dc2626); }
+/* welcome screen */
+#gate { background: var(--hero); }
+#gate form { background: var(--paper); border-radius: 24px; padding: 22px 20px; box-shadow: 0 30px 60px -20px rgb(0 0 0 / .5); }
+#gate .gicon { background: linear-gradient(135deg, #1d4ed8, #3b82f6); box-shadow: 0 12px 24px -10px rgb(29 78 216 / .7); }
+/* celebration when the result turns profitable */
+.confetti { position: fixed; z-index: 60; pointer-events: none; width: 8px; height: 13px; border-radius: 2px; animation: fall 1.25s cubic-bezier(.15, .7, .35, 1) forwards; }
+@keyframes fall { 0% { transform: translate(0, 0) rotate(0); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { #verdict.popped { animation: none; } .confetti { display: none; } button.btn:hover { transform: none; } }
 </style>
 
 <div id="gate" hidden>
@@ -209,13 +302,14 @@ footer { color: var(--muted); font-size: 12px; }
     </div>
     <h1 data-t="h1"></h1>
     <p class="lead" data-t="lead"></p>
+    <div class="chips"><span data-t="chip1"></span><span data-t="chip2"></span><span data-t="chip3"></span></div>
     <div class="ios-hint" id="iosHint" hidden><span data-t="iosHint"></span><button type="button" id="iosClose" aria-label="x">×</button></div>
   </header>
 
   <div class="cols">
     <section class="card sticky" aria-labelledby="h-in">
       <div class="charthead">
-        <div><h2 id="h-in" data-t="inTitle"></h2><p class="hint" style="margin:0" data-t="inHint"></p></div>
+        <div><h2 id="h-in" data-ico="🧾" data-t="inTitle"></h2><p class="hint" style="margin:0" data-t="inHint"></p></div>
         <div style="display:flex;gap:8px;align-items:center"><button type="button" class="btn" id="exBtn" style="min-height:38px;padding:8px 12px;font-size:13px" data-t="exampleBtn"></button><button type="button" class="btn" id="reset" style="min-height:38px;padding:8px 12px;font-size:13px" data-t="reset"></button></div>
       </div>
       <div class="projbar">
@@ -268,7 +362,7 @@ footer { color: var(--muted); font-size: 12px; }
 
     <div style="display:grid;gap:16px;min-width:0">
       <section class="card" id="verdict" aria-live="polite" aria-labelledby="h-v">
-        <div class="vtop"><h2 id="h-v" data-t="vTitle"></h2><span class="pill" id="vPill"></span></div>
+        <div class="vtop"><h2 id="h-v" data-ico="💰" data-t="vTitle"></h2><span class="pill" id="vPill"></span></div>
         <div id="vProfit" class="num"></div>
         <p id="vLine"></p>
         <div class="kpis" id="kpis"></div>
@@ -276,7 +370,7 @@ footer { color: var(--muted); font-size: 12px; }
 
       <section class="card" id="journal" aria-labelledby="h-j">
         <div class="charthead">
-          <div><h2 id="h-j" data-t="jTitle"></h2><p class="hint" style="margin:0" data-t="jHint"></p></div>
+          <div><h2 id="h-j" data-ico="📅" data-t="jTitle"></h2><p class="hint" style="margin:0" data-t="jHint"></p></div>
           <span class="seg" role="group"><button type="button" id="mPrev" aria-label="‹">‹</button><button type="button" id="mLabel" style="cursor:default"></button><button type="button" id="mNext" aria-label="›">›</button></span>
         </div>
         <div class="jday"><label for="jDate" data-t="jDay"></label><input type="date" id="jDate"></div>
@@ -301,24 +395,24 @@ footer { color: var(--muted); font-size: 12px; }
       </section>
 
       <section class="card" aria-labelledby="h-wf">
-        <div class="charthead"><div><h2 id="h-wf" data-t="wfTitle"></h2><p class="hint" style="margin:0" data-t="wfHint"></p></div></div>
+        <div class="charthead"><div><h2 id="h-wf" data-ico="💸" data-t="wfTitle"></h2><p class="hint" style="margin:0" data-t="wfHint"></p></div></div>
         <svg class="chart" id="wf" viewBox="0 0 640 300" role="img"></svg>
       </section>
 
       <div class="grid2">
         <section class="card" aria-labelledby="h-fun">
-          <h2 id="h-fun" data-t="funTitle"></h2><p class="hint" data-t="funHint"></p>
+          <h2 id="h-fun" data-ico="📦" data-t="funTitle"></h2><p class="hint" data-t="funHint"></p>
           <svg class="chart" id="fun" viewBox="0 0 320 200" role="img"></svg>
         </section>
         <section class="card" aria-labelledby="h-lim">
-          <h2 id="h-lim" data-t="limTitle"></h2><p class="hint" data-t="limHint"></p>
+          <h2 id="h-lim" data-ico="🎯" data-t="limTitle"></h2><p class="hint" data-t="limHint"></p>
           <div class="limits" id="limits" style="grid-template-columns:1fr"></div>
         </section>
       </div>
 
       <section class="card" aria-labelledby="h-sens">
         <div class="charthead">
-          <div><h2 id="h-sens" data-t="sensTitle"></h2><p class="hint" style="margin:0" id="sensHint"></p></div>
+          <div><h2 id="h-sens" data-ico="🔮" data-t="sensTitle"></h2><p class="hint" style="margin:0" id="sensHint"></p></div>
           <span class="seg" role="group"><button type="button" data-sens="deliv" class="on" data-t="sDeliv"></button><button type="button" data-sens="conf" data-t="sConf"></button><button type="button" data-sens="cpa" data-t="sAds"></button><button type="button" data-sens="price" data-t="sPrice"></button></span>
         </div>
         <svg class="chart" id="sens" viewBox="0 0 640 260" role="img"></svg>
@@ -326,12 +420,12 @@ footer { color: var(--muted); font-size: 12px; }
       </section>
 
       <section class="card" aria-labelledby="h-adv">
-        <h2 id="h-adv" data-t="advTitle"></h2><p class="hint" data-t="advHint"></p>
+        <h2 id="h-adv" data-ico="💡" data-t="advTitle"></h2><p class="hint" data-t="advHint"></p>
         <ul id="advice"></ul>
       </section>
 
       <section class="card" id="contact" aria-labelledby="h-c">
-        <h2 id="h-c" data-t="cTitle"></h2>
+        <h2 id="h-c" data-ico="💬" data-t="cTitle"></h2>
         <p data-t="cText"></p>
         <label for="who" class="hint" style="color:inherit;opacity:.75;display:block;margin-bottom:6px" data-t="cName"></label>
         <input id="who" autocomplete="given-name">
@@ -449,6 +543,7 @@ fr: {
   csvHead: ["Date", "Produit", "Commandes reçues", "Confirmées", "Livrées", "Retournées", "Pub (DT)", "Chiffre d'affaires (DT)", "Coût produits (DT)", "Emballage (DT)", "Livraison (DT)", "Frais retour (DT)", "Retenue 3% (DT)", "Bénéfice du jour (DT)"],
   csvSumHead: ["Produit", "Commandes reçues", "Confirmées", "Taux de confirmation", "Livrées", "Taux de livraison", "Retournées", "Chiffre d'affaires (DT)", "Pub (DT)", "Bénéfice avant frais fixes (DT)", "Frais fixes (DT)", "Bénéfice net (DT)"],
   csvSimRows: ["Prix de vente (DT)", "Coût du produit (DT)", "Marge produit", "Bénéfice net de la période (DT)", "Pub max par commande livrée (DT)", "Prix minimum (DT)"],
+  chip1: "✓ Gratuit", chip2: "✓ Marche sans internet", chip3: "✓ Suivi jour par jour",
   gTitle: "Bienvenue sur E-Calculator", gText: "Le calculateur est gratuit. Présente-toi en 10 secondes, puis commence.",
   gName: "Ton prénom et nom", gShop: "Nom de ta boutique (page Facebook ou Instagram)", gPhone: "Ton numéro de téléphone",
   gConsent: "J'accepte que mon nom, ma boutique et mon numéro soient envoyés à l'équipe E-Calculator, qui peut me contacter pour des conseils et des nouveautés.",
@@ -553,6 +648,7 @@ en: {
   csvHead: ["Date", "Product", "Orders received", "Confirmed", "Delivered", "Returned", "Ads (TND)", "Revenue (TND)", "Product cost (TND)", "Packaging (TND)", "Delivery (TND)", "Return fees (TND)", "3% withholding (TND)", "Daily profit (TND)"],
   csvSumHead: ["Product", "Orders received", "Confirmed", "Confirmation rate", "Delivered", "Delivery rate", "Returned", "Revenue (TND)", "Ads (TND)", "Profit before fixed costs (TND)", "Fixed costs (TND)", "Net profit (TND)"],
   csvSimRows: ["Selling price (TND)", "Product cost (TND)", "Product margin", "Net profit for the period (TND)", "Max ads per delivered order (TND)", "Minimum price (TND)"],
+  chip1: "✓ Free", chip2: "✓ Works offline", chip3: "✓ Day-by-day tracking",
   gTitle: "Welcome to E-Calculator", gText: "The calculator is free. Introduce yourself in 10 seconds, then start.",
   gName: "Your first and last name", gShop: "Your shop's name (Facebook or Instagram page)", gPhone: "Your phone number",
   gConsent: "I agree that my name, shop and number are sent to the E-Calculator team, who may contact me with tips and news.",
@@ -657,6 +753,7 @@ ar: {
   csvHead: ["التاريخ", "المنتج", "الطلبيات المستلمة", "المؤكّدة", "المُسلَّمة", "المرتجعة", "الإشهار (د.ت)", "رقم المعاملات (د.ت)", "تكلفة المنتجات (د.ت)", "التغليف (د.ت)", "التوصيل (د.ت)", "مصاريف الإرجاع (د.ت)", "خصم 3% (د.ت)", "ربح اليوم (د.ت)"],
   csvSumHead: ["المنتج", "الطلبيات المستلمة", "المؤكّدة", "نسبة التأكيد", "المُسلَّمة", "نسبة التسليم", "المرتجعة", "رقم المعاملات (د.ت)", "الإشهار (د.ت)", "الربح قبل المصاريف الثابتة (د.ت)", "المصاريف الثابتة (د.ت)", "الربح الصافي (د.ت)"],
   csvSimRows: ["سعر البيع (د.ت)", "تكلفة المنتج (د.ت)", "هامش المنتج", "الربح الصافي للفترة (د.ت)", "أقصى إشهار لكل طلبية مُسلَّمة (د.ت)", "أدنى سعر (د.ت)"],
+  chip1: "✓ مجاني", chip2: "✓ يعمل بدون إنترنت", chip3: "✓ متابعة يومية",
   gTitle: "مرحباً بك في E-Calculator", gText: "الحاسبة مجانية. عرّف بنفسك في 10 ثوانٍ ثم ابدأ.",
   gName: "اسمك ولقبك", gShop: "اسم متجرك (صفحة فيسبوك أو إنستغرام)", gPhone: "رقم هاتفك",
   gConsent: "أوافق على إرسال اسمي واسم متجري ورقمي إلى فريق E-Calculator، ويمكنه التواصل معي لتقديم نصائح ومستجدات.",
@@ -795,7 +892,7 @@ function renderProjects() {
   $("histBox").hidden = SERVER !== "on";
   $("projExport").hidden = window.self !== window.top;   // the online viewer can't download files
 }
-function switchTo(id) { PID = id; S = migrate(P[id].data); persist(); fill(); render(); renderProjects(); $("histBox").open = false; }
+function switchTo(id) { lastGrade = undefined; PID = id; S = migrate(P[id].data); persist(); fill(); render(); renderProjects(); $("histBox").open = false; }
 $("projSel").onchange = () => switchTo($("projSel").value);
 $("projNew").onclick = () => { const id = addProject(newName(t("pDefault")), EXAMPLE); persist(); switchTo(id); schedule(100); };
 $("projMore").onclick = () => { const o = $("projPanel").hidden; $("projPanel").hidden = !o; $("projMore").setAttribute("aria-expanded", o); };
@@ -896,8 +993,7 @@ function render() {
   $("verdict").className = "card " + g;
   $("vPill").className = "pill " + g;
   $("vPill").textContent = t(g === "good" ? "pGood" : g === "warn" ? "pWarn" : "pBad");
-  $("vProfit").textContent = dt(r.profit, 0);
-  $("vProfit").style.color = r.profit < 0 ? "var(--bad)" : g === "good" ? "var(--good)" : "var(--ink)";
+  tween($("vProfit"), r.profit, (v) => dt(v, 0));
   $("vLine").innerHTML = r.delivered > 0 ? t("vLine")(dt(r.per(r.profit)), pc(r.netPct), dt(r.revenue, 0)) : t("vNone");
   const k = [
     [t("kMargin"), pc(r.grossPct), grade.gross(r.grossPct), t("perPiece")(dt(r.unitMargin))],
@@ -913,10 +1009,35 @@ function render() {
   drawWaterfall(r); drawFunnel(r); drawLimits(r); drawSens(); renderAdvice(r); updateContact(r);
   if (isEmpty()) {
     $("verdict").className = "card"; $("vPill").className = "pill"; $("vPill").textContent = t("pEmpty");
-    $("vProfit").style.color = "var(--muted)"; $("vLine").textContent = t("vEmpty"); $("kpis").innerHTML = "";
+    $("vLine").textContent = t("vEmpty"); $("kpis").innerHTML = "";
     $("barDot").style.background = "var(--muted)"; $("advice").innerHTML = `<li>${t("aEmpty")}</li>`;
   }
+  const gg = isEmpty() ? "" : g;
+  $("bar").className = gg;
+  if (lastGrade !== undefined && lastGrade !== gg && gg === "good") celebrate();
+  lastGrade = gg;
   renderJournal();
+}
+let lastGrade;
+const calm = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+function tween(elm, to, fmt) {   // numbers count to their new value
+  const from = elm._v ?? to; elm._v = to; cancelAnimationFrame(elm._raf);
+  if (from === to || calm() || document.hidden) { elm.textContent = fmt(to); return; }
+  const t0 = performance.now(), D = 450;
+  const step = (now) => { const k = Math.min(1, (now - t0) / D), e = 1 - Math.pow(1 - k, 3); elm.textContent = fmt(from + (to - from) * e); if (k < 1) elm._raf = requestAnimationFrame(step); };
+  elm._raf = requestAnimationFrame(step);
+}
+function celebrate() {
+  const v = $("verdict"); v.classList.remove("popped"); void v.offsetWidth; v.classList.add("popped");
+  if (calm()) return;
+  const b = v.getBoundingClientRect(), cx = b.left + b.width / 2, cy = Math.min(Math.max(b.top + 70, 60), innerHeight - 160);
+  const cols = ["#4ade80", "#22c55e", "#3b82f6", "#fde047", "#ffffff", "#86efac", "#60a5fa"];
+  for (let i = 0; i < 40; i++) {
+    const s = document.createElement("i"), a = Math.random() * Math.PI * 2, d = 70 + Math.random() * 170;
+    s.className = "confetti";
+    s.style.cssText = `left:${cx}px;top:${cy}px;background:${cols[i % cols.length]};--dx:${(Math.cos(a) * d).toFixed(0)}px;--dy:${(Math.sin(a) * d * 0.6 + 140).toFixed(0)}px;--rot:${(Math.random() * 720 - 360).toFixed(0)}deg;animation-delay:${(Math.random() * 90).toFixed(0)}ms`;
+    document.body.appendChild(s); setTimeout(() => s.remove(), 1600);
+  }
 }
 
 // ---------------- charts (hand-drawn SVG, theme colours via CSS variables)

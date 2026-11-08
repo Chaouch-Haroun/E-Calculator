@@ -1,0 +1,12 @@
+{
+  "name": "e-calculator-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for E-Calculator: e-commerce profit for cash-on-delivery sellers in Tunisia (profit, limits, what-if, day-by-day report).",
+  "type": "module",
+  "bin": { "e-calculator-mcp": "mcp/server.mjs" },
+  "files": ["mcp/"],
+  "engines": { "node": ">=18" },
+  "keywords": ["mcp", "model-context-protocol", "ecommerce", "calculator", "tunisia", "cash-on-delivery"],
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/Chaouch-Haroun/E-Calculator.git" }
+}

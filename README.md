@@ -157,6 +157,42 @@ Touche <b>Copier pour Google Sheets</b>, ouvre une feuille vide et colle (Ctrl+V
 
 ---
 
+---
+
+## 🤖 Connecter ton IA (MCP)
+
+Tu utilises Claude, Cursor ou une autre app compatible **MCP**? Branche E-Calculator dessus: ton IA fait le même calcul que le site, avec tes chiffres, et t'explique le résultat.
+
+**Il faut:** [Node.js](https://nodejs.org) 18 ou plus récent installé sur ton ordinateur.
+
+**Claude Desktop:** Réglages → Développeur → Modifier la configuration, puis ajoute:
+
+```json
+{
+  "mcpServers": {
+    "e-calculator": {
+      "command": "npx",
+      "args": ["-y", "github:Chaouch-Haroun/E-Calculator"]
+    }
+  }
+}
+```
+
+Redémarre Claude Desktop. Les autres apps MCP (Cursor, VS Code, …) utilisent la même commande: `npx -y github:Chaouch-Haroun/E-Calculator`.
+
+Ensuite, demande simplement:
+> *Je vends une montre 59 DT, elle me coûte 22 DT. Cette semaine: 100 commandes, 65 confirmées, 52 livrées, 60 $ de pub, livraison 7 DT, retour 7 DT. Je gagne combien?*
+
+| Outil | Ce qu'il fait |
+|---|---|
+| `calculate_profit` | Bénéfice net, tous les coûts, taux, pub max par commande, prix minimum, ROAS, vérifications et conseils |
+| `profit_sensitivity` | « Et si? »: le bénéfice quand la livraison, la confirmation, la pub ou le prix change, avec le seuil de rentabilité |
+| `daily_report` | Le bénéfice de chaque jour, le total du mois, le meilleur et le pire jour, la fin du mois à ce rythme |
+
+Le serveur tourne sur ton ordinateur, sans compte et sans dépendance. Il ne fait que calculer: rien n'est envoyé ailleurs.
+
+---
+
 <details>
 <summary><b>🇬🇧 English</b></summary>
 
@@ -167,6 +203,8 @@ Touche <b>Copier pour Google Sheets</b>, ouvre une feuille vide et colle (Ctrl+V
 - **iPhone (Safari):** Share → Add to Home Screen.
 
 It then works offline and updates itself when online. Your sales numbers are saved on your device at every change and never sent anywhere. On first launch you're asked, with your consent, for your name, shop name and phone number; only these 3 fields are sent to the E-Calculator team. Use ⋯ → Export / Import to move them to another device.
+
+**MCP server:** connect Claude Desktop, Cursor or any MCP client with `npx -y github:Chaouch-Haroun/E-Calculator` (Node.js 18+). Tools: `calculate_profit`, `profit_sensitivity`, `daily_report`. Same math as the website, runs locally, no dependencies.
 </details>
 
 <details>
@@ -198,6 +236,7 @@ Un site statique: un seul `index.html` (HTML, CSS et JavaScript, sans framework 
 | `manifest.webmanifest` | nom, icônes et couleurs pour l'installation |
 | `sw.js` | garde une copie de la page pour le mode hors ligne (réseau d'abord, cache si hors ligne) |
 | `icon-*.png` | icônes de l'app |
+| `mcp/` + `package.json` | serveur MCP (stdio, sans dépendance): `core.mjs` reprend exactement le calcul de `index.html` |
 
 Données: `localStorage` du navigateur (`ecalc-projects`, un objet par produit avec les champs du calcul et `J` pour le suivi jour par jour). `navigator.storage.persist()` est demandé au premier enregistrement.
 
