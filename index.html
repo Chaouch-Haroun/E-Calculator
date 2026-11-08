@@ -275,6 +275,23 @@ a.btn.primary, button.btn.primary { background: linear-gradient(135deg, #4ade80,
 :root[data-theme="light"] { color-scheme: light; }
 #themeBtn { width: 42px; height: 38px; border-radius: 10px; border: 1px solid rgb(255 255 255 / .3); background: rgb(255 255 255 / .08); color: #fff; font-size: 17px; cursor: pointer; display: grid; place-items: center; }
 #themeBtn:hover { background: rgb(255 255 255 / .18); }
+/* ask your AI */
+#mcp .aistep { margin: 16px 0 8px; font: 700 14px var(--body); color: var(--blue); }
+#mcp .qchips { display: grid; gap: 8px; }
+#mcp .qchips button { text-align: start; font: 500 14px/1.35 var(--body); color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; cursor: pointer; transition: border-color .15s, transform .15s, background .15s; }
+#mcp .qchips button:hover { border-color: var(--blue); transform: translateY(-1px); }
+#mcp .qchips button.on { border-color: var(--blue); background: color-mix(in srgb, var(--blue) 10%, var(--paper)); box-shadow: 0 0 0 3px rgb(33 82 232 / .12); }
+#mcp textarea { width: 100%; margin-top: 8px; min-height: 52px; resize: vertical; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); color: var(--ink); font: 15px var(--body); padding: 10px 12px; }
+#mcp textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 4px rgb(33 82 232 / .15); }
+#mcp .aibtns { display: flex; flex-wrap: wrap; gap: 8px; }
+#mcp .aibtns .btn { min-height: 46px; }
+#mcp .aistate { min-height: 1em; margin: 8px 0 0; font-size: 13px; } #mcp .aistate.ok { color: var(--good); } #mcp .aistate.bad { color: var(--bad); }
+#mcp .aiprev { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; }
+#mcp .aiprev summary { cursor: pointer; padding: 10px 12px; font-size: 13px; font-weight: 600; color: var(--muted); }
+#mcp .aiprev pre { margin: 0 10px 10px; white-space: pre-wrap; word-break: break-word; max-height: 260px; overflow-y: auto; text-align: start; direction: inherit; }
+#mcp .mcpbox { margin-top: 16px; border-radius: 14px; padding: 14px; border: 1px dashed color-mix(in srgb, var(--blue) 40%, var(--line)); background: color-mix(in srgb, var(--blue) 5%, var(--paper)); }
+#mcp .mcpbox b { font: 800 16px var(--display); }
+#mcp .mcpbox p { margin: 6px 0 0; font-size: 14px; color: var(--muted); }
 /* AI (MCP) guide */
 #mcp .what { display: grid; gap: 10px; grid-template-columns: 1fr; margin: 12px 0 4px; }
 @media (min-width: 640px) { #mcp .what { grid-template-columns: repeat(3, 1fr); } }
@@ -298,6 +315,26 @@ a.btn.primary, button.btn.primary { background: linear-gradient(135deg, #4ade80,
 #mcp .ask li { background: var(--soft); border-radius: 10px; padding: 8px 12px; font-size: 14px; }
 #mcp .help { margin-top: 14px; display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; background: var(--chip); border-radius: 14px; padding: 12px 14px; }
 #mcp .help p { margin: 0; font-weight: 600; }
+/* glass panels */
+body::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(42vmax 42vmax at 8% 6%, rgb(59 130 246 / .20), transparent 62%), radial-gradient(36vmax 36vmax at 96% 34%, rgb(74 222 128 / .18), transparent 62%),
+              radial-gradient(44vmax 44vmax at 40% 100%, rgb(37 99 235 / .14), transparent 62%); }
+:root { --glass: linear-gradient(135deg, rgb(15 42 122 / .88) 0%, rgb(29 78 216 / .76) 50%, rgb(37 99 235 / .62) 100%); --glass-line: rgb(255 255 255 / .38); }
+header, #verdict { background: var(--glass) !important; -webkit-backdrop-filter: blur(22px) saturate(170%); backdrop-filter: blur(22px) saturate(170%);
+  border: 1px solid var(--glass-line) !important; box-shadow: inset 0 1px 0 rgb(255 255 255 / .45), inset 0 -1px 0 rgb(255 255 255 / .08), 0 24px 50px -18px rgb(29 78 216 / .5) !important; }
+header::after, #verdict::after { background-image: linear-gradient(118deg, rgb(255 255 255 / .30) 0%, rgb(255 255 255 / .06) 32%, transparent 48%) !important; background-size: auto !important;
+  -webkit-mask-image: none !important; mask-image: none !important; }
+#verdict::before { content: ""; position: absolute; width: 260px; height: 260px; right: -80px; top: -110px; border-radius: 50%; background: radial-gradient(circle, rgb(74 222 128 / .45), transparent 65%); z-index: -1; }
+#verdict .kpi, [dir="rtl"] #verdict .kpi { background: rgb(255 255 255 / .82); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: inset 0 1px 0 rgb(255 255 255 / .9), 0 8px 18px -10px rgb(0 0 0 / .3); }
+#bar { background: rgb(29 78 216 / .70) !important; -webkit-backdrop-filter: blur(18px) saturate(170%); backdrop-filter: blur(18px) saturate(170%); border-top: 1px solid rgb(255 255 255 / .35); box-shadow: inset 0 1px 0 rgb(255 255 255 / .3), 0 -10px 30px -12px rgb(15 42 122 / .45) !important; }
+#gate form { background: rgb(255 255 255 / .84); -webkit-backdrop-filter: blur(22px) saturate(160%); backdrop-filter: blur(22px) saturate(160%); border: 1px solid rgb(255 255 255 / .6); }
+#mcp .help { background: linear-gradient(135deg, rgb(33 82 232 / .10), rgb(74 222 128 / .12)); border: 1px solid rgb(33 82 232 / .18); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --glass: linear-gradient(135deg, rgb(15 30 80 / .78) 0%, rgb(29 63 160 / .62) 50%, rgb(59 110 230 / .42) 100%); --glass-line: rgb(255 255 255 / .18); }
+  :root:not([data-theme="light"]) #gate form { background: rgb(15 26 51 / .82); border-color: rgb(255 255 255 / .12); }
+  :root:not([data-theme="light"]) body::before { opacity: .7; } }
+:root[data-theme="dark"] { --glass: linear-gradient(135deg, rgb(15 30 80 / .78) 0%, rgb(29 63 160 / .62) 50%, rgb(59 110 230 / .42) 100%); --glass-line: rgb(255 255 255 / .18); }
+:root[data-theme="dark"] #gate form { background: rgb(15 26 51 / .82); border-color: rgb(255 255 255 / .12); }
+:root[data-theme="dark"] body::before { opacity: .7; }
 </style>
 
 <div id="gate" hidden>
@@ -450,33 +487,30 @@ a.btn.primary, button.btn.primary { background: linear-gradient(135deg, #4ade80,
       </section>
 
       <section class="card" id="mcp" aria-labelledby="h-mcp">
-        <h2 id="h-mcp" data-ico="🤖" data-t="mTitle"></h2>
-        <p class="hint" style="margin:6px 0 0;font-size:15px;color:var(--ink)" data-t="mLead"></p>
-        <div class="what">
-          <div><b data-t="mW1t"></b><span data-t="mW1"></span></div>
-          <div><b data-t="mW2t"></b><span data-t="mW2"></span></div>
-          <div><b data-t="mW3t"></b><span data-t="mW3"></span></div>
+        <h2 id="h-mcp" data-ico="🤖" data-t="aiTitle"></h2>
+        <p class="hint" style="margin:6px 0 0;font-size:15px;color:var(--ink)" data-t="aiLead"></p>
+        <p class="aistep" data-t="aiPick"></p>
+        <div class="qchips" id="aiQs" role="group"></div>
+        <textarea id="aiOwn" rows="2" maxlength="500"></textarea>
+        <p class="aistep" data-t="aiSend"></p>
+        <div class="aibtns">
+          <a class="btn primary" id="aiGpt" href="https://chatgpt.com/" target="_blank" rel="noopener">ChatGPT</a>
+          <a class="btn" id="aiClaude" href="https://claude.ai/new" target="_blank" rel="noopener">Claude</a>
+          <a class="btn" id="aiGemini" href="https://gemini.google.com/app" target="_blank" rel="noopener">Gemini</a>
+          <button type="button" class="btn" id="aiCopy" data-t="aiCopy"></button>
         </div>
-        <details id="mcpSteps">
-          <summary data-t="mSteps"></summary>
-          <ol>
-            <li><div><b data-t="mS1"></b><p data-th="mS1p"></p></div></li>
-            <li><div><b data-t="mS2"></b><p data-th="mS2p"></p></div></li>
-            <li><div><b data-t="mS3"></b><p data-t="mS3p"></p><pre id="mcpCfg">{
-  "mcpServers": {
-    "e-calculator": {
-      "command": "npx",
-      "args": ["-y", "github:Chaouch-Haroun/E-Calculator"]
-    }
-  }
-}</pre>
-              <div class="copyrow"><button type="button" class="btn" id="mcpCopyCfg" data-t="mCopyCfg"></button></div><p data-t="mS3n"></p></div></li>
-            <li><div><b data-t="mS4"></b><p data-t="mS4p"></p></div></li>
-            <li><div><b data-t="mS5"></b><p data-t="mS5p"></p>
-              <ul class="ask"><li id="mcpAsk1" data-t="mAsk1"></li><li data-t="mAsk2"></li><li data-t="mAsk3"></li></ul>
-              <div class="copyrow"><button type="button" class="btn" id="mcpCopyAsk" data-t="mCopyAsk"></button></div></div></li>
-          </ol>
-        </details>
+        <p class="aistate" id="aiState" aria-live="polite"></p>
+        <details class="aiprev"><summary data-t="aiPreview"></summary><pre id="aiText"></pre></details>
+        <p class="hint" style="margin:10px 0 0" data-t="aiPrivacy"></p>
+
+        <div class="mcpbox">
+          <b data-t="mcpTitle"></b>
+          <p data-t="mcpText"></p>
+          <div class="copyrow">
+            <button type="button" class="btn" id="mcpCopyMsg" data-t="mcpCopy"></button>
+            <a class="btn" href="https://github.com/Chaouch-Haroun/E-Calculator#-connecter-ton-ia-mcp" target="_blank" rel="noopener" data-t="mcpGuide"></a>
+          </div>
+        </div>
         <div class="help" id="mcpHelp"><p data-t="mHelp"></p><a class="btn primary" id="mcpHelpBtn" href="#" target="_blank" rel="noopener" data-t="mHelpBtn"></a></div>
       </section>
 
@@ -600,19 +634,24 @@ fr: {
   csvSumHead: ["Produit", "Commandes reçues", "Confirmées", "Taux de confirmation", "Livrées", "Taux de livraison", "Retournées", "Chiffre d'affaires (DT)", "Pub (DT)", "Bénéfice avant frais fixes (DT)", "Frais fixes (DT)", "Bénéfice net (DT)"],
   csvSimRows: ["Prix de vente (DT)", "Coût du produit (DT)", "Marge produit", "Bénéfice net de la période (DT)", "Pub max par commande livrée (DT)", "Prix minimum (DT)"],
   copiedOk: "Copié ✓", themeDark: "Passer en mode sombre", themeLight: "Passer en mode clair",
-  mTitle: "Utilise E-Calculator avec ton IA", mLead: "Tu utilises une IA comme Claude sur ton ordinateur? Tu peux lui brancher ce calculateur. Tu lui écris tes chiffres comme à un ami, elle fait le calcul exact et t'explique quoi améliorer.",
-  mW1t: "C'est quoi?", mW1: "Une « prise » (on l'appelle MCP) qui branche ton IA sur la calculatrice de ce site.",
-  mW2t: "Pourquoi?", mW2: "Sans la prise, l'IA devine les chiffres. Avec, elle calcule exactement comme ici.",
-  mW3t: "Il te faut", mW3: "Un ordinateur (Windows ou Mac) et 10 minutes, une seule fois. Pas sur téléphone pour l'instant.",
-  mSteps: "Voir les 5 étapes", mS1: "Installe Node.js", mS1p: 'Va sur <a href="https://nodejs.org" target="_blank" rel="noopener">nodejs.org</a>, télécharge la version <b>LTS</b>, puis clique sur Suivant jusqu\'à la fin.',
-  mS2: "Installe Claude Desktop", mS2p: 'Télécharge-le sur <a href="https://claude.ai/download" target="_blank" rel="noopener">claude.ai/download</a> et connecte-toi.',
-  mS3: "Colle ce texte dans Claude", mS3p: "Dans Claude: Réglages → Développeur → Modifier la configuration. Un fichier s'ouvre: colle ce texte dedans, puis enregistre.",
-  mCopyCfg: "Copier le texte", mS3n: "Si le fichier contient déjà quelque chose, ne l'efface pas: contacte-moi et je t'aide.",
-  mS4: "Redémarre Claude", mS4p: "Ferme Claude complètement et rouvre-le. « e-calculator » apparaît dans ses outils.",
-  mS5: "Pose ta question", mS5p: "Écris tes chiffres normalement, par exemple:",
-  mAsk1: "Je vends une montre 59 DT, elle me coûte 22 DT. Cette semaine: 100 commandes, 65 confirmées, 52 livrées, 60 $ de pub, livraison 7 DT, retour 7 DT. Je gagne combien?",
-  mAsk2: "À partir de quel taux de livraison je perds de l'argent?", mAsk3: "Voici mes chiffres de chaque jour de la semaine: fais-moi le bilan du mois.",
-  mCopyAsk: "Copier l'exemple", mHelp: "Tu bloques ou tu veux savoir ce que l'IA peut faire pour ta boutique? Écris-moi.", mHelpBtn: "Me contacter",
+  aiTitle: "Demande à ton IA", aiLead: "Ton IA (ChatGPT, Claude, Gemini…) reçoit tes vrais chiffres en un geste et répond aux questions qui comptent. Rien à retaper, rien à installer.",
+  aiPick: "1. Choisis une question, ou écris la tienne", aiSend: "2. Touche ton IA: le message est copié, colle-le si besoin",
+  aiQ: ["Ma pub est-elle trop chère? Je coupe, je garde ou j'augmente le budget?", "Mes frais de livraison sont-ils trop hauts pour ma marge? Je devrais les faire payer au client?",
+        "Quel prix je devrais mettre? Et si je monte de 10 DT et que je perds 15 % des commandes?", "Quel produit me fait vraiment gagner de l'argent, et lequel j'arrête?",
+        "Confirmation et livraison: qu'est-ce que je change en premier pour gagner plus?"],
+  aiOwnPh: "Ou écris ta question ici…", aiCopy: "Copier le message", aiPreview: "Voir le message envoyé",
+  aiCopied: "Message copié ✓ Si ton IA ne l'a pas déjà, colle-le (appui long → Coller).", aiCopyFail: "Copie impossible: ouvre « Voir le message » et copie-le à la main.",
+  aiPrivacy: "Tes chiffres ne partent que si tu les colles toi-même dans ton IA.",
+  ai: { intro: "Tu es un conseiller e-commerce pour un vendeur en Tunisie qui vend en paiement à la livraison. Montants en dinars (DT). Voici mes chiffres, tirés de E-Calculator.",
+    rules: "Règles de calcul: coût du produit sur les colis livrés; emballage sur les colis confirmés (envoyés); livraison sur les colis livrés, sauf si le client la paie; frais de retour sur les colis retournés; retenue de 3 % sur le montant encaissé si je n'ai pas de matricule fiscal; pub convertie en DT.",
+    product: "Produit", period: "Période", returns: "retours", result: "Résultat", perDeliv: "par commande livrée", journal: "Suivi jour par jour",
+    journalKey: "reçues / confirmées / livrées / retours", adsShort: "pub", monthTotal: "Total du mois, frais fixes déduits", others: "Mes autres produits",
+    bench: "Repères: marge produit ≥ 55 % bien, < 40 % faible; confirmation ≥ 70 % bien, < 50 % faible; livraison ≥ 80 % bien, < 65 % faible; ROAS ≥ 4 bien, < 2,5 faible.",
+    question: "Ma question", answer: "Réponds simplement en français (ou en darija si je t'écris en darija), avec des chiffres, puis donne-moi 3 actions concrètes pour cette semaine.", yes: "oui", no: "non" },
+  mcpTitle: "⚡ Pour aller plus loin: le MCP", mcpText: "Si ton IA est branchée sur tes comptes (Meta Ads, Google Sheets, ta boutique…), le MCP lui permet d'aller chercher tes chiffres toute seule et de les calculer avec E-Calculator, sans rien copier. Ça s'installe une fois sur ordinateur (Claude Desktop, Cursor, VS Code, Gemini CLI).",
+  mcpCopy: "Copier le message d'installation", mcpGuide: "Guide sur GitHub",
+  mMsg: "Aide-moi à installer le serveur MCP « E-Calculator » sur mon ordinateur: c'est un calculateur de bénéfice e-commerce (paiement à la livraison). Explique-moi étape par étape, simplement. Il a besoin de Node.js 18 ou plus récent. Voici la configuration à ajouter dans mon app:\n\n{\n  \"mcpServers\": {\n    \"e-calculator\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"github:Chaouch-Haroun/E-Calculator\"]\n    }\n  }\n}",
+mHelp: "Tu bloques ou tu veux savoir ce que l'IA peut faire pour ta boutique? Écris-moi.", mHelpBtn: "Me contacter",
   mHelpMsg: "Salut, j'ai besoin d'aide pour utiliser E-Calculator avec mon IA (MCP).",
   chip1: "✓ Gratuit", chip2: "✓ Marche sans internet", chip3: "✓ Suivi jour par jour",
   gTitle: "Bienvenue sur E-Calculator", gText: "Le calculateur est gratuit. Présente-toi en 10 secondes, puis commence.",
@@ -720,19 +759,24 @@ en: {
   csvSumHead: ["Product", "Orders received", "Confirmed", "Confirmation rate", "Delivered", "Delivery rate", "Returned", "Revenue (TND)", "Ads (TND)", "Profit before fixed costs (TND)", "Fixed costs (TND)", "Net profit (TND)"],
   csvSimRows: ["Selling price (TND)", "Product cost (TND)", "Product margin", "Net profit for the period (TND)", "Max ads per delivered order (TND)", "Minimum price (TND)"],
   copiedOk: "Copied ✓", themeDark: "Switch to dark mode", themeLight: "Switch to light mode",
-  mTitle: "Use E-Calculator with your AI", mLead: "Do you use an AI like Claude on your computer? You can plug this calculator into it. Write your numbers like you would to a friend: it does the exact math and tells you what to improve.",
-  mW1t: "What is it?", mW1: "A \"plug\" (called MCP) that connects your AI to this site's calculator.",
-  mW2t: "Why?", mW2: "Without the plug, the AI guesses the numbers. With it, it calculates exactly like here.",
-  mW3t: "You need", mW3: "A computer (Windows or Mac) and 10 minutes, once. Not on phones for now.",
-  mSteps: "See the 5 steps", mS1: "Install Node.js", mS1p: 'Go to <a href="https://nodejs.org" target="_blank" rel="noopener">nodejs.org</a>, download the <b>LTS</b> version and click Next until the end.',
-  mS2: "Install Claude Desktop", mS2p: 'Download it from <a href="https://claude.ai/download" target="_blank" rel="noopener">claude.ai/download</a> and sign in.',
-  mS3: "Paste this text into Claude", mS3p: "In Claude: Settings → Developer → Edit Config. A file opens: paste this text into it and save.",
-  mCopyCfg: "Copy the text", mS3n: "If the file already has something in it, don't delete it: contact me and I'll help.",
-  mS4: "Restart Claude", mS4p: "Quit Claude completely and open it again. \"e-calculator\" shows up in its tools.",
-  mS5: "Ask your question", mS5p: "Write your numbers normally, for example:",
-  mAsk1: "I sell a watch for 59 TND and it costs me 22 TND. This week: 100 orders, 65 confirmed, 52 delivered, $60 of ads, delivery 7 TND, return 7 TND. How much do I make?",
-  mAsk2: "Below which delivery rate do I lose money?", mAsk3: "Here are my numbers for each day of the week: give me the month's summary.",
-  mCopyAsk: "Copy the example", mHelp: "Stuck, or want to know what AI can do for your shop? Message me.", mHelpBtn: "Contact me",
+  aiTitle: "Ask your AI", aiLead: "Your AI (ChatGPT, Claude, Gemini…) gets your real numbers in one tap and answers the questions that matter. Nothing to retype, nothing to install.",
+  aiPick: "1. Pick a question, or write your own", aiSend: "2. Tap your AI: the message is copied, paste it if needed",
+  aiQ: ["Are my ads too expensive? Should I cut, keep or raise the budget?", "Is my delivery fee too high for my margin? Should the customer pay it?",
+        "What price should I set? And if I add 10 TND and lose 15% of orders?", "Which product really makes me money, and which should I stop?",
+        "Confirmation and delivery: what should I change first to earn more?"],
+  aiOwnPh: "Or write your question here…", aiCopy: "Copy the message", aiPreview: "See the message sent",
+  aiCopied: "Message copied ✓ If your AI doesn't have it yet, paste it (long press → Paste).", aiCopyFail: "Copying isn't possible: open \"See the message\" and copy it by hand.",
+  aiPrivacy: "Your numbers only leave when you paste them into your AI yourself.",
+  ai: { intro: "You are an e-commerce advisor for a seller in Tunisia who sells with cash on delivery. Amounts in Tunisian dinars (TND). Here are my numbers, from E-Calculator.",
+    rules: "Calculation rules: product cost on delivered parcels; packaging on confirmed (shipped) parcels; delivery fee on delivered parcels unless the customer pays it; return fee on returned parcels; 3% withholding on the amount collected if I have no tax ID; ads converted to TND.",
+    product: "Product", period: "Period", returns: "returns", result: "Result", perDeliv: "per delivered order", journal: "Day by day",
+    journalKey: "received / confirmed / delivered / returned", adsShort: "ads", monthTotal: "Month total, after fixed costs", others: "My other products",
+    bench: "Benchmarks: product margin ≥ 55% good, < 40% weak; confirmation ≥ 70% good, < 50% weak; delivery ≥ 80% good, < 65% weak; ROAS ≥ 4 good, < 2.5 weak.",
+    question: "My question", answer: "Answer simply in English, with numbers, then give me 3 concrete actions for this week.", yes: "yes", no: "no" },
+  mcpTitle: "⚡ Going further: MCP", mcpText: "If your AI is connected to your accounts (Meta Ads, Google Sheets, your shop…), MCP lets it fetch your numbers by itself and calculate them with E-Calculator, with nothing to copy. It's installed once on a computer (Claude Desktop, Cursor, VS Code, Gemini CLI).",
+  mcpCopy: "Copy the install message", mcpGuide: "Guide on GitHub",
+  mMsg: "Help me install the \"E-Calculator\" MCP server on my computer: it's an e-commerce profit calculator (cash on delivery). Explain step by step, simply. It needs Node.js 18 or newer. Here is the configuration to add to my app:\n\n{\n  \"mcpServers\": {\n    \"e-calculator\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"github:Chaouch-Haroun/E-Calculator\"]\n    }\n  }\n}",
+mHelp: "Stuck, or want to know what AI can do for your shop? Message me.", mHelpBtn: "Contact me",
   mHelpMsg: "Hi, I need help using E-Calculator with my AI (MCP).",
   chip1: "✓ Free", chip2: "✓ Works offline", chip3: "✓ Day-by-day tracking",
   gTitle: "Welcome to E-Calculator", gText: "The calculator is free. Introduce yourself in 10 seconds, then start.",
@@ -840,19 +884,24 @@ ar: {
   csvSumHead: ["المنتج", "الطلبيات المستلمة", "المؤكّدة", "نسبة التأكيد", "المُسلَّمة", "نسبة التسليم", "المرتجعة", "رقم المعاملات (د.ت)", "الإشهار (د.ت)", "الربح قبل المصاريف الثابتة (د.ت)", "المصاريف الثابتة (د.ت)", "الربح الصافي (د.ت)"],
   csvSimRows: ["سعر البيع (د.ت)", "تكلفة المنتج (د.ت)", "هامش المنتج", "الربح الصافي للفترة (د.ت)", "أقصى إشهار لكل طلبية مُسلَّمة (د.ت)", "أدنى سعر (د.ت)"],
   copiedOk: "تم النسخ ✓", themeDark: "الوضع الداكن", themeLight: "الوضع الفاتح",
-  mTitle: "استعمل E-Calculator مع الذكاء الاصطناعي", mLead: "تستعمل ذكاءً اصطناعياً مثل Claude على حاسوبك؟ يمكنك ربطه بهذه الحاسبة. اكتب له أرقامك كأنك تكلم صديقاً، فيحسب بدقة ويشرح لك ما يجب تحسينه.",
-  mW1t: "ما هذا؟", mW1: "«قابس» (اسمه MCP) يربط الذكاء الاصطناعي بحاسبة هذا الموقع.",
-  mW2t: "لماذا؟", mW2: "بدون القابس، الذكاء الاصطناعي يخمّن الأرقام. معه، يحسب تماماً مثل هنا.",
-  mW3t: "تحتاج إلى", mW3: "حاسوب (Windows أو Mac) و10 دقائق، مرة واحدة. ليس على الهاتف حالياً.",
-  mSteps: "شاهد الخطوات الخمس", mS1: "ثبّت Node.js", mS1p: 'ادخل إلى <a href="https://nodejs.org" target="_blank" rel="noopener">nodejs.org</a>، حمّل نسخة <b>LTS</b>، ثم اضغط «التالي» حتى النهاية.',
-  mS2: "ثبّت Claude Desktop", mS2p: 'حمّله من <a href="https://claude.ai/download" target="_blank" rel="noopener">claude.ai/download</a> وسجّل الدخول.',
-  mS3: "الصق هذا النص في Claude", mS3p: "في Claude: الإعدادات ← المطوّر ← تعديل الإعدادات. يُفتح ملف: الصق فيه هذا النص ثم احفظ.",
-  mCopyCfg: "نسخ النص", mS3n: "إذا كان الملف يحتوي على شيء من قبل، لا تحذفه: تواصل معي وسأساعدك.",
-  mS4: "أعد تشغيل Claude", mS4p: "أغلق Claude تماماً ثم افتحه من جديد. يظهر «e-calculator» في أدواته.",
-  mS5: "اطرح سؤالك", mS5p: "اكتب أرقامك بشكل عادي، مثلاً:",
-  mAsk1: "أبيع ساعة بـ 59 د.ت وتكلّفني 22 د.ت. هذا الأسبوع: 100 طلبية، 65 مؤكّدة، 52 مُسلَّمة، 60$ إشهار، التوصيل 7 د.ت، الإرجاع 7 د.ت. كم أربح؟",
-  mAsk2: "تحت أي نسبة تسليم أبدأ في الخسارة؟", mAsk3: "هذه أرقامي لكل يوم من الأسبوع: أعطني حصيلة الشهر.",
-  mCopyAsk: "نسخ المثال", mHelp: "واجهتك مشكلة أو تريد أن تعرف ماذا يمكن أن يفعل الذكاء الاصطناعي لمتجرك؟ راسلني.", mHelpBtn: "تواصل معي",
+  aiTitle: "اسأل الذكاء الاصطناعي", aiLead: "يحصل الذكاء الاصطناعي (ChatGPT، Claude، Gemini…) على أرقامك الحقيقية بلمسة واحدة ويجيب عن الأسئلة المهمة. لا إعادة كتابة ولا تثبيت.",
+  aiPick: "1. اختر سؤالاً أو اكتب سؤالك", aiSend: "2. اضغط على تطبيقك: تُنسخ الرسالة، الصقها إذا لزم الأمر",
+  aiQ: ["هل إشهاري غالٍ؟ أوقف، أواصل، أم أزيد الميزانية؟", "هل مصاريف التوصيل مرتفعة مقارنة بهامشي؟ هل أجعل الحريف يدفعها؟",
+        "أي سعر أضع؟ وإذا زدت 10 د.ت وخسرت 15% من الطلبيات؟", "أي منتج يربحني فعلاً، وأيّها أوقف؟",
+        "التأكيد والتسليم: ماذا أغيّر أولاً لأربح أكثر؟"],
+  aiOwnPh: "أو اكتب سؤالك هنا…", aiCopy: "نسخ الرسالة", aiPreview: "شاهد الرسالة المرسلة",
+  aiCopied: "تم نسخ الرسالة ✓ إذا لم تظهر في التطبيق، الصقها (ضغطة طويلة ← لصق).", aiCopyFail: "النسخ غير ممكن: افتح «شاهد الرسالة» وانسخها يدوياً.",
+  aiPrivacy: "أرقامك لا تُرسل إلا إذا لصقتها بنفسك في تطبيق الذكاء الاصطناعي.",
+  ai: { intro: "أنت مستشار تجارة إلكترونية لبائع في تونس يبيع بالدفع عند الاستلام. المبالغ بالدينار التونسي (د.ت). هذه أرقامي من E-Calculator.",
+    rules: "قواعد الحساب: تكلفة المنتج على الطرود المُسلَّمة؛ التغليف على الطرود المؤكّدة (المرسلة)؛ التوصيل على الطرود المُسلَّمة إلا إذا دفعه الحريف؛ مصاريف الإرجاع على الطرود المرتجعة؛ خصم 3% من المبلغ المحصَّل إذا لم يكن لدي معرّف جبائي؛ الإشهار محوّل إلى الدينار.",
+    product: "المنتج", period: "الفترة", returns: "مرتجعات", result: "النتيجة", perDeliv: "لكل طلبية مُسلَّمة", journal: "المتابعة اليومية",
+    journalKey: "مستلمة / مؤكّدة / مُسلَّمة / مرتجعة", adsShort: "إشهار", monthTotal: "مجموع الشهر بعد المصاريف الثابتة", others: "منتجاتي الأخرى",
+    bench: "مؤشرات: هامش المنتج ≥ 55% جيد، < 40% ضعيف؛ التأكيد ≥ 70% جيد، < 50% ضعيف؛ التسليم ≥ 80% جيد، < 65% ضعيف؛ ROAS ≥ 4 جيد، < 2.5 ضعيف.",
+    question: "سؤالي", answer: "أجب ببساطة بالعربية (أو بالدارجة إذا كتبت لك بالدارجة)، بالأرقام، ثم أعطني 3 إجراءات عملية لهذا الأسبوع.", yes: "نعم", no: "لا" },
+  mcpTitle: "⚡ للمزيد: الـ MCP", mcpText: "إذا كان الذكاء الاصطناعي مربوطاً بحساباتك (Meta Ads، Google Sheets، متجرك…)، يسمح له الـ MCP بجلب أرقامك بنفسه وحسابها مع E-Calculator دون نسخ أي شيء. يُثبّت مرة واحدة على الحاسوب (Claude Desktop، Cursor، VS Code، Gemini CLI).",
+  mcpCopy: "نسخ رسالة التثبيت", mcpGuide: "الدليل على GitHub",
+  mMsg: "ساعدني على تثبيت خادم MCP «E-Calculator» على حاسوبي: هو حاسبة أرباح للتجارة الإلكترونية (الدفع عند الاستلام). اشرح لي خطوة بخطوة وببساطة. يحتاج إلى Node.js 18 أو أحدث. هذه الإعدادات التي يجب إضافتها في تطبيقي:\n\n{\n  \"mcpServers\": {\n    \"e-calculator\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"github:Chaouch-Haroun/E-Calculator\"]\n    }\n  }\n}",
+mHelp: "واجهتك مشكلة أو تريد أن تعرف ماذا يمكن أن يفعل الذكاء الاصطناعي لمتجرك؟ راسلني.", mHelpBtn: "تواصل معي",
   mHelpMsg: "سلام، أحتاج مساعدة لاستعمال E-Calculator مع الذكاء الاصطناعي (MCP).",
   chip1: "✓ مجاني", chip2: "✓ يعمل بدون إنترنت", chip3: "✓ متابعة يومية",
   gTitle: "مرحباً بك في E-Calculator", gText: "الحاسبة مجانية. عرّف بنفسك في 10 ثوانٍ ثم ابدأ.",
@@ -1118,6 +1167,7 @@ function render() {
   if (lastGrade !== undefined && lastGrade !== gg && gg === "good") celebrate();
   lastGrade = gg;
   renderJournal();
+  if ($("aiQs")) updateAi();
 }
 let lastGrade;
 const calm = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1511,8 +1561,49 @@ async function copyBtn(btn, text, key) {
   try { await navigator.clipboard.writeText(text); btn.textContent = t("copiedOk"); } catch (e) { btn.textContent = t("copyFail"); }
   setTimeout(() => (btn.textContent = t(key)), 2000);
 }
-$("mcpCopyCfg").onclick = () => copyBtn($("mcpCopyCfg"), $("mcpCfg").textContent, "mCopyCfg");
-$("mcpCopyAsk").onclick = () => copyBtn($("mcpCopyAsk"), t("mAsk1"), "mCopyAsk");
+let aiQ = 0;
+function aiPrompt() {
+  const L = t("ai"), r = compute(S), ym = jDay.slice(0, 7), mo = monthOf(S, ym), out = [];
+  const q = $("aiOwn").value.trim() || t("aiQ")[aiQ];
+  const adsTxt = (v, dtv) => (S.cur === "usd" ? `${nf(0).format(v)} $ (${dt(dtv, 0)})` : dt(dtv, 0));
+  out.push(L.intro, "", L.rules, "", `${L.product}: ${P[PID].name}`,
+    `- ${t("price")}: ${dt(S.price)} · ${t("cost")}: ${dt(S.cost)} · ${t("pack")}: ${dt(S.pack)}`,
+    `- ${t("ship")}: ${dt(S.ship)}${S.clientPays ? ` (${t("clientPays")})` : ""} · ${t("ret")}: ${dt(S.ret)}`,
+    `- ${t("wht")}: ${S.wht ? L.yes : L.no} · ${t("fixed")}: ${dt(S.fixed)}`);
+  if (!isEmpty()) out.push("", `${L.period}:`,
+    `- ${t("leads")}: ${num(r.leads)} · ${t("confN")}: ${num(r.confirmed)} (${pc(r.confRate)}) · ${t("delivN")}: ${num(r.delivered)} (${pc(r.delivRate)}) · ${L.returns}: ${num(r.returned)}`,
+    `- ${t("ads")}: ${adsTxt(S.ads, r.ads)}`,
+    `- ${L.result}: ${dt(r.profit, 0)} · ${dt(r.per(r.profit))} ${L.perDeliv} · ${t("kMargin")} ${pc(r.grossPct)} · ${t("lim")[0]} ${dt(Math.max(0, r.maxCpa))} · ${t("kMin")} ${dt(r.minPrice)} · ROAS ${isFinite(r.roas) ? nf(1).format(r.roas) + "×" : "-"}`);
+  if (mo.any) {
+    out.push("", `${L.journal}, ${monthName(ym)} (${L.journalKey}):`);
+    for (const d of mo.days) if (d.e) out.push(`- ${d.key}: ${d.e.leads} / ${d.e.conf} / ${d.e.deliv} / ${d.e.ret} · ${L.adsShort} ${adsTxt(d.e.ads, d.m.ads)} → ${dt(d.m.profit, 0)}`);
+    out.push(`- ${L.monthTotal}: ${dt(mo.net, 0)}${mo.proj != null ? ` · ${t("jProj")}: ${dt(mo.proj, 0)}` : ""}`);
+  }
+  const others = Object.values(P).filter((x) => x.id !== PID).map((x) => [x, migrate(x.data)]).filter(([, s]) => s.price > 0);
+  if (others.length) { out.push("", `${L.others}:`); for (const [x, s] of others) { const rr = compute(s); out.push(`- ${x.name}: ${t("price")} ${dt(s.price)}, ${t("cost")} ${dt(s.cost)}, ${t("kMargin")} ${pc(rr.grossPct)}, ${L.result} ${dt(rr.profit, 0)}`); } }
+  out.push("", L.bench, "", `${L.question}: ${q}`, "", L.answer);
+  return out.join("\n");
+}
+function updateAi() {
+  if (!$("aiQs").children.length || $("aiQs").dataset.lang !== LANG) {
+    $("aiQs").dataset.lang = LANG;
+    $("aiQs").replaceChildren(...t("aiQ").map((txt, i) => { const b = document.createElement("button"); b.type = "button"; b.textContent = txt; b.onclick = () => { aiQ = i; $("aiOwn").value = ""; updateAi(); }; return b; }));
+  }
+  [...$("aiQs").children].forEach((b, i) => b.classList.toggle("on", i === aiQ && !$("aiOwn").value.trim()));
+  $("aiOwn").placeholder = t("aiOwnPh");
+  const text = aiPrompt(), enc = encodeURIComponent(text), short = enc.length < 7000;   // long messages are pasted instead of passed in the link
+  $("aiText").textContent = text;
+  $("aiGpt").href = short ? `https://chatgpt.com/?q=${enc}` : "https://chatgpt.com/";
+  $("aiClaude").href = short ? `https://claude.ai/new?q=${enc}` : "https://claude.ai/new";
+}
+async function aiCopy() {
+  try { await navigator.clipboard.writeText(aiPrompt()); $("aiState").textContent = t("aiCopied"); $("aiState").className = "aistate ok"; }
+  catch (e) { $("aiState").textContent = t("aiCopyFail"); $("aiState").className = "aistate bad"; }
+}
+$("aiOwn").addEventListener("input", updateAi);
+["aiGpt", "aiClaude", "aiGemini"].forEach((id) => $(id).addEventListener("click", aiCopy));   // copy, then the link opens the app
+$("aiCopy").onclick = aiCopy;
+$("mcpCopyMsg").onclick = () => copyBtn($("mcpCopyMsg"), t("mMsg"), "mcpCopy");
 function updateMcpHelp() {   // the help button uses the WhatsApp number or Instagram link from CONFIG
   const wa = CONFIG.whatsapp ? `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(t("mHelpMsg"))}` : "", link = wa || CONFIG.instagram;
   $("mcpHelp").hidden = !link; if (link) $("mcpHelpBtn").href = link;
@@ -1525,7 +1616,8 @@ function applyLang() {
   ["app", "bar", "gate"].forEach((id) => { $(id).setAttribute("dir", rtl ? "rtl" : "ltr"); $(id).setAttribute("lang", LANG); });
   document.querySelectorAll("[data-t]").forEach((e) => { const v = t(e.dataset.t); if (typeof v === "string") e.textContent = v; });
   document.querySelectorAll("[data-th]").forEach((e) => { e.innerHTML = t(e.dataset.th); });   // our own texts with links
-  applyTheme(); updateMcpHelp();
+  $("aiState").textContent = "";
+  applyTheme(); updateMcpHelp(); updateAi();
   $("who").placeholder = t("cPh");
   document.querySelectorAll("[data-lang]").forEach((b) => b.classList.toggle("on", b.dataset.lang === LANG));
   if ($("dataDir").dataset.dir) $("dataDir").textContent = t("pDir")($("dataDir").dataset.dir);

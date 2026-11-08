@@ -35,7 +35,8 @@ Le calculateur gratuit pour les vendeurs en ligne en Tunisie qui travaillent en 
 | 📊 **Graphiques** | Où part ton argent, tes commandes étape par étape, et « et si ça change? » (livraison, confirmation, pub, prix). |
 | 📄 **Rapport** | Un fichier CSV pour Excel, ou un copier-coller direct dans Google Sheets. |
 | 📦 **Plusieurs produits** | Un calcul et un suivi séparés pour chaque produit, plus le total de tous tes produits. |
-| 🌍 **3 langues** | Français, anglais et arabe (de droite à gauche). |
+| 🤖 **Demande à ton IA** | Un geste: ton IA (ChatGPT, Claude, Gemini) reçoit tes chiffres et répond à tes questions sur la pub, la livraison, le prix. |
+| 🌍 **3 langues** | Français, anglais et arabe (de droite à gauche), mode clair ou sombre. |
 
 ---
 
@@ -161,7 +162,9 @@ Touche <b>Copier pour Google Sheets</b>, ouvre une feuille vide et colle (Ctrl+V
 
 ## 🤖 Connecter ton IA (MCP)
 
-Tu utilises Claude, Cursor ou une autre app compatible **MCP**? Branche E-Calculator dessus: ton IA fait le même calcul que le site, avec tes chiffres, et t'explique le résultat.
+Le plus simple, sans rien installer: sur le site, section **Demande à ton IA**, choisis une question et touche ChatGPT, Claude ou Gemini. Ton IA reçoit tes chiffres et répond.
+
+**Le MCP va plus loin.** Si ton IA est connectée à tes comptes (Meta Ads, Google Sheets, ta boutique, les relevés de ta société de livraison…), elle va chercher tes chiffres **toute seule** et les calcule avec E-Calculator: tu n'as plus rien à copier ni à taper. Ça s'installe une fois, sur ordinateur.
 
 **Il faut:** [Node.js](https://nodejs.org) 18 ou plus récent installé sur ton ordinateur.
 
@@ -180,8 +183,10 @@ Tu utilises Claude, Cursor ou une autre app compatible **MCP**? Branche E-Calcul
 
 Redémarre Claude Desktop. Les autres apps MCP (Cursor, VS Code, …) utilisent la même commande: `npx -y github:Chaouch-Haroun/E-Calculator`.
 
-Ensuite, demande simplement:
-> *Je vends une montre 59 DT, elle me coûte 22 DT. Cette semaine: 100 commandes, 65 confirmées, 52 livrées, 60 $ de pub, livraison 7 DT, retour 7 DT. Je gagne combien?*
+Ensuite, pose les questions qui comptent. Ton IA récupère les chiffres dans tes comptes connectés ou tes fichiers:
+> *Regarde ma pub Meta de la semaine: mon coût par commande livrée est trop haut? Je coupe, je garde ou j'augmente?*<br>
+> *Mes frais de livraison sont trop hauts pour ma marge? Je devrais les faire payer au client?*<br>
+> *Si je monte mon prix de 10 DT et que je perds 15 % des commandes, je gagne plus ou moins?*
 
 | Outil | Ce qu'il fait |
 |---|---|

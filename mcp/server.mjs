@@ -4,11 +4,13 @@
 import { createInterface } from "node:readline";
 import { TOOLS, callTool } from "./core.mjs";
 
-const INFO = { name: "e-calculator", title: "E-Calculator", version: "1.0.0" };
+const INFO = { name: "e-calculator", title: "E-Calculator", version: "1.1.0" };
 const VERSIONS = ["2025-06-18", "2025-03-26", "2024-11-05"];
 const INSTRUCTIONS = "Profit calculator for e-commerce sellers in Tunisia who sell with cash on delivery. Amounts are in Tunisian dinars (TND); "
   + "ads are usually paid in USD and converted with usd_to_tnd. Use calculate_profit for a period's numbers, profit_sensitivity for what-if questions "
-  + "and break-even points, daily_report for day-by-day numbers. Ask the seller for missing required numbers instead of guessing them, "
+  + "and break-even points, daily_report for day-by-day numbers. Before asking the seller to type anything, fetch the numbers yourself from what you can "
+  + "access: connected tools (ads manager such as Meta Ads, Google Sheets or Drive, the online shop, the courier's statements) and files or screenshots "
+  + "the seller shared. Only ask for what you cannot find, never guess required numbers, "
   + "and answer in the seller's language (often French, Tunisian Darija or Arabic). Benchmarks are indicative.";
 
 const send = (m) => process.stdout.write(JSON.stringify(m) + "\n");
