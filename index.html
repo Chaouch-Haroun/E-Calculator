@@ -8,6 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="E-Calculator">
 <style>:root{color-scheme:light dark}body{margin:0}[hidden]{display:none!important}</style>
 <title>E-Calculator</title>
+<script>try { const m = JSON.parse(localStorage.getItem("ecalc-theme")); if (m === "light" || m === "dark") document.documentElement.dataset.theme = m; } catch (e) {}</script>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap">
@@ -270,6 +271,33 @@ a.btn.primary, button.btn.primary { background: linear-gradient(135deg, #4ade80,
 .confetti { position: fixed; z-index: 60; pointer-events: none; width: 8px; height: 13px; border-radius: 2px; animation: fall 1.25s cubic-bezier(.15, .7, .35, 1) forwards; }
 @keyframes fall { 0% { transform: translate(0, 0) rotate(0); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { #verdict.popped { animation: none; } .confetti { display: none; } button.btn:hover { transform: none; } }
+/* light / dark switch */
+:root[data-theme="light"] { color-scheme: light; }
+#themeBtn { width: 42px; height: 38px; border-radius: 10px; border: 1px solid rgb(255 255 255 / .3); background: rgb(255 255 255 / .08); color: #fff; font-size: 17px; cursor: pointer; display: grid; place-items: center; }
+#themeBtn:hover { background: rgb(255 255 255 / .18); }
+/* AI (MCP) guide */
+#mcp .what { display: grid; gap: 10px; grid-template-columns: 1fr; margin: 12px 0 4px; }
+@media (min-width: 640px) { #mcp .what { grid-template-columns: repeat(3, 1fr); } }
+#mcp .what div { background: var(--soft); border: 1px solid var(--line); border-radius: 14px; padding: 12px; font-size: 14px; }
+#mcp .what b { display: block; font: 800 16px var(--display); margin-bottom: 2px; }
+#mcp details { margin-top: 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); }
+#mcp summary { cursor: pointer; padding: 14px 16px; font-weight: 700; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+#mcp summary::-webkit-details-marker { display: none; }
+#mcp summary::after { content: "＋"; color: var(--blue); font-size: 18px; }
+#mcp details[open] summary::after { content: "－"; }
+#mcp ol { counter-reset: s; list-style: none; margin: 0; padding: 0 16px 16px; display: grid; gap: 14px; }
+#mcp ol > li { counter-increment: s; display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: start; }
+#mcp ol > li::before { content: counter(s); width: 34px; height: 34px; border-radius: 50%; background: var(--blue); color: #fff; display: grid; place-items: center; font: 800 15px var(--display); }
+#mcp ol > li > div { min-width: 0; }
+#mcp ol p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+#mcp ol a { color: var(--blue); font-weight: 600; }
+#mcp pre { margin: 8px 0 0; background: #0b1736; color: #dbe7ff; border-radius: 12px; padding: 12px 14px; font: 13px/1.5 var(--mono); overflow-x: auto; direction: ltr; text-align: left; }
+#mcp .copyrow { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+#mcp .copyrow .btn { min-height: 38px; padding: 6px 12px; font-size: 13px; }
+#mcp .ask { margin: 8px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+#mcp .ask li { background: var(--soft); border-radius: 10px; padding: 8px 12px; font-size: 14px; }
+#mcp .help { margin-top: 14px; display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; background: var(--chip); border-radius: 14px; padding: 12px 14px; }
+#mcp .help p { margin: 0; font-weight: 600; }
 </style>
 
 <div id="gate" hidden>
@@ -292,6 +320,7 @@ a.btn.primary, button.btn.primary { background: linear-gradient(135deg, #4ade80,
   <header>
     <div class="topbar">
       <button type="button" class="btn" id="installBtn" hidden data-t="install"></button>
+      <button type="button" id="themeBtn"></button>
       <span class="seg lang" role="group" aria-label="Langue / Language / اللغة">
         <button type="button" data-lang="fr">FR</button><button type="button" data-lang="en">EN</button><button type="button" data-lang="ar">عربي</button>
       </span>
@@ -420,6 +449,37 @@ a.btn.primary, button.btn.primary { background: linear-gradient(135deg, #4ade80,
         <ul id="advice"></ul>
       </section>
 
+      <section class="card" id="mcp" aria-labelledby="h-mcp">
+        <h2 id="h-mcp" data-ico="🤖" data-t="mTitle"></h2>
+        <p class="hint" style="margin:6px 0 0;font-size:15px;color:var(--ink)" data-t="mLead"></p>
+        <div class="what">
+          <div><b data-t="mW1t"></b><span data-t="mW1"></span></div>
+          <div><b data-t="mW2t"></b><span data-t="mW2"></span></div>
+          <div><b data-t="mW3t"></b><span data-t="mW3"></span></div>
+        </div>
+        <details id="mcpSteps">
+          <summary data-t="mSteps"></summary>
+          <ol>
+            <li><div><b data-t="mS1"></b><p data-th="mS1p"></p></div></li>
+            <li><div><b data-t="mS2"></b><p data-th="mS2p"></p></div></li>
+            <li><div><b data-t="mS3"></b><p data-t="mS3p"></p><pre id="mcpCfg">{
+  "mcpServers": {
+    "e-calculator": {
+      "command": "npx",
+      "args": ["-y", "github:Chaouch-Haroun/E-Calculator"]
+    }
+  }
+}</pre>
+              <div class="copyrow"><button type="button" class="btn" id="mcpCopyCfg" data-t="mCopyCfg"></button></div><p data-t="mS3n"></p></div></li>
+            <li><div><b data-t="mS4"></b><p data-t="mS4p"></p></div></li>
+            <li><div><b data-t="mS5"></b><p data-t="mS5p"></p>
+              <ul class="ask"><li id="mcpAsk1" data-t="mAsk1"></li><li data-t="mAsk2"></li><li data-t="mAsk3"></li></ul>
+              <div class="copyrow"><button type="button" class="btn" id="mcpCopyAsk" data-t="mCopyAsk"></button></div></div></li>
+          </ol>
+        </details>
+        <div class="help" id="mcpHelp"><p data-t="mHelp"></p><a class="btn primary" id="mcpHelpBtn" href="#" target="_blank" rel="noopener" data-t="mHelpBtn"></a></div>
+      </section>
+
       <section class="card" id="contact" aria-labelledby="h-c">
         <h2 id="h-c" data-ico="💬" data-t="cTitle"></h2>
         <p data-t="cText"></p>
@@ -539,6 +599,21 @@ fr: {
   csvHead: ["Date", "Produit", "Commandes reçues", "Confirmées", "Livrées", "Retournées", "Pub (DT)", "Chiffre d'affaires (DT)", "Coût produits (DT)", "Emballage (DT)", "Livraison (DT)", "Frais retour (DT)", "Retenue 3% (DT)", "Bénéfice du jour (DT)"],
   csvSumHead: ["Produit", "Commandes reçues", "Confirmées", "Taux de confirmation", "Livrées", "Taux de livraison", "Retournées", "Chiffre d'affaires (DT)", "Pub (DT)", "Bénéfice avant frais fixes (DT)", "Frais fixes (DT)", "Bénéfice net (DT)"],
   csvSimRows: ["Prix de vente (DT)", "Coût du produit (DT)", "Marge produit", "Bénéfice net de la période (DT)", "Pub max par commande livrée (DT)", "Prix minimum (DT)"],
+  copiedOk: "Copié ✓", themeDark: "Passer en mode sombre", themeLight: "Passer en mode clair",
+  mTitle: "Utilise E-Calculator avec ton IA", mLead: "Tu utilises une IA comme Claude sur ton ordinateur? Tu peux lui brancher ce calculateur. Tu lui écris tes chiffres comme à un ami, elle fait le calcul exact et t'explique quoi améliorer.",
+  mW1t: "C'est quoi?", mW1: "Une « prise » (on l'appelle MCP) qui branche ton IA sur la calculatrice de ce site.",
+  mW2t: "Pourquoi?", mW2: "Sans la prise, l'IA devine les chiffres. Avec, elle calcule exactement comme ici.",
+  mW3t: "Il te faut", mW3: "Un ordinateur (Windows ou Mac) et 10 minutes, une seule fois. Pas sur téléphone pour l'instant.",
+  mSteps: "Voir les 5 étapes", mS1: "Installe Node.js", mS1p: 'Va sur <a href="https://nodejs.org" target="_blank" rel="noopener">nodejs.org</a>, télécharge la version <b>LTS</b>, puis clique sur Suivant jusqu\'à la fin.',
+  mS2: "Installe Claude Desktop", mS2p: 'Télécharge-le sur <a href="https://claude.ai/download" target="_blank" rel="noopener">claude.ai/download</a> et connecte-toi.',
+  mS3: "Colle ce texte dans Claude", mS3p: "Dans Claude: Réglages → Développeur → Modifier la configuration. Un fichier s'ouvre: colle ce texte dedans, puis enregistre.",
+  mCopyCfg: "Copier le texte", mS3n: "Si le fichier contient déjà quelque chose, ne l'efface pas: contacte-moi et je t'aide.",
+  mS4: "Redémarre Claude", mS4p: "Ferme Claude complètement et rouvre-le. « e-calculator » apparaît dans ses outils.",
+  mS5: "Pose ta question", mS5p: "Écris tes chiffres normalement, par exemple:",
+  mAsk1: "Je vends une montre 59 DT, elle me coûte 22 DT. Cette semaine: 100 commandes, 65 confirmées, 52 livrées, 60 $ de pub, livraison 7 DT, retour 7 DT. Je gagne combien?",
+  mAsk2: "À partir de quel taux de livraison je perds de l'argent?", mAsk3: "Voici mes chiffres de chaque jour de la semaine: fais-moi le bilan du mois.",
+  mCopyAsk: "Copier l'exemple", mHelp: "Tu bloques ou tu veux savoir ce que l'IA peut faire pour ta boutique? Écris-moi.", mHelpBtn: "Me contacter",
+  mHelpMsg: "Salut, j'ai besoin d'aide pour utiliser E-Calculator avec mon IA (MCP).",
   chip1: "✓ Gratuit", chip2: "✓ Marche sans internet", chip3: "✓ Suivi jour par jour",
   gTitle: "Bienvenue sur E-Calculator", gText: "Le calculateur est gratuit. Présente-toi en 10 secondes, puis commence.",
   gName: "Ton prénom et nom", gShop: "Nom de ta boutique (page Facebook ou Instagram)", gPhone: "Ton numéro de téléphone",
@@ -644,6 +719,21 @@ en: {
   csvHead: ["Date", "Product", "Orders received", "Confirmed", "Delivered", "Returned", "Ads (TND)", "Revenue (TND)", "Product cost (TND)", "Packaging (TND)", "Delivery (TND)", "Return fees (TND)", "3% withholding (TND)", "Daily profit (TND)"],
   csvSumHead: ["Product", "Orders received", "Confirmed", "Confirmation rate", "Delivered", "Delivery rate", "Returned", "Revenue (TND)", "Ads (TND)", "Profit before fixed costs (TND)", "Fixed costs (TND)", "Net profit (TND)"],
   csvSimRows: ["Selling price (TND)", "Product cost (TND)", "Product margin", "Net profit for the period (TND)", "Max ads per delivered order (TND)", "Minimum price (TND)"],
+  copiedOk: "Copied ✓", themeDark: "Switch to dark mode", themeLight: "Switch to light mode",
+  mTitle: "Use E-Calculator with your AI", mLead: "Do you use an AI like Claude on your computer? You can plug this calculator into it. Write your numbers like you would to a friend: it does the exact math and tells you what to improve.",
+  mW1t: "What is it?", mW1: "A \"plug\" (called MCP) that connects your AI to this site's calculator.",
+  mW2t: "Why?", mW2: "Without the plug, the AI guesses the numbers. With it, it calculates exactly like here.",
+  mW3t: "You need", mW3: "A computer (Windows or Mac) and 10 minutes, once. Not on phones for now.",
+  mSteps: "See the 5 steps", mS1: "Install Node.js", mS1p: 'Go to <a href="https://nodejs.org" target="_blank" rel="noopener">nodejs.org</a>, download the <b>LTS</b> version and click Next until the end.',
+  mS2: "Install Claude Desktop", mS2p: 'Download it from <a href="https://claude.ai/download" target="_blank" rel="noopener">claude.ai/download</a> and sign in.',
+  mS3: "Paste this text into Claude", mS3p: "In Claude: Settings → Developer → Edit Config. A file opens: paste this text into it and save.",
+  mCopyCfg: "Copy the text", mS3n: "If the file already has something in it, don't delete it: contact me and I'll help.",
+  mS4: "Restart Claude", mS4p: "Quit Claude completely and open it again. \"e-calculator\" shows up in its tools.",
+  mS5: "Ask your question", mS5p: "Write your numbers normally, for example:",
+  mAsk1: "I sell a watch for 59 TND and it costs me 22 TND. This week: 100 orders, 65 confirmed, 52 delivered, $60 of ads, delivery 7 TND, return 7 TND. How much do I make?",
+  mAsk2: "Below which delivery rate do I lose money?", mAsk3: "Here are my numbers for each day of the week: give me the month's summary.",
+  mCopyAsk: "Copy the example", mHelp: "Stuck, or want to know what AI can do for your shop? Message me.", mHelpBtn: "Contact me",
+  mHelpMsg: "Hi, I need help using E-Calculator with my AI (MCP).",
   chip1: "✓ Free", chip2: "✓ Works offline", chip3: "✓ Day-by-day tracking",
   gTitle: "Welcome to E-Calculator", gText: "The calculator is free. Introduce yourself in 10 seconds, then start.",
   gName: "Your first and last name", gShop: "Your shop's name (Facebook or Instagram page)", gPhone: "Your phone number",
@@ -749,6 +839,21 @@ ar: {
   csvHead: ["التاريخ", "المنتج", "الطلبيات المستلمة", "المؤكّدة", "المُسلَّمة", "المرتجعة", "الإشهار (د.ت)", "رقم المعاملات (د.ت)", "تكلفة المنتجات (د.ت)", "التغليف (د.ت)", "التوصيل (د.ت)", "مصاريف الإرجاع (د.ت)", "خصم 3% (د.ت)", "ربح اليوم (د.ت)"],
   csvSumHead: ["المنتج", "الطلبيات المستلمة", "المؤكّدة", "نسبة التأكيد", "المُسلَّمة", "نسبة التسليم", "المرتجعة", "رقم المعاملات (د.ت)", "الإشهار (د.ت)", "الربح قبل المصاريف الثابتة (د.ت)", "المصاريف الثابتة (د.ت)", "الربح الصافي (د.ت)"],
   csvSimRows: ["سعر البيع (د.ت)", "تكلفة المنتج (د.ت)", "هامش المنتج", "الربح الصافي للفترة (د.ت)", "أقصى إشهار لكل طلبية مُسلَّمة (د.ت)", "أدنى سعر (د.ت)"],
+  copiedOk: "تم النسخ ✓", themeDark: "الوضع الداكن", themeLight: "الوضع الفاتح",
+  mTitle: "استعمل E-Calculator مع الذكاء الاصطناعي", mLead: "تستعمل ذكاءً اصطناعياً مثل Claude على حاسوبك؟ يمكنك ربطه بهذه الحاسبة. اكتب له أرقامك كأنك تكلم صديقاً، فيحسب بدقة ويشرح لك ما يجب تحسينه.",
+  mW1t: "ما هذا؟", mW1: "«قابس» (اسمه MCP) يربط الذكاء الاصطناعي بحاسبة هذا الموقع.",
+  mW2t: "لماذا؟", mW2: "بدون القابس، الذكاء الاصطناعي يخمّن الأرقام. معه، يحسب تماماً مثل هنا.",
+  mW3t: "تحتاج إلى", mW3: "حاسوب (Windows أو Mac) و10 دقائق، مرة واحدة. ليس على الهاتف حالياً.",
+  mSteps: "شاهد الخطوات الخمس", mS1: "ثبّت Node.js", mS1p: 'ادخل إلى <a href="https://nodejs.org" target="_blank" rel="noopener">nodejs.org</a>، حمّل نسخة <b>LTS</b>، ثم اضغط «التالي» حتى النهاية.',
+  mS2: "ثبّت Claude Desktop", mS2p: 'حمّله من <a href="https://claude.ai/download" target="_blank" rel="noopener">claude.ai/download</a> وسجّل الدخول.',
+  mS3: "الصق هذا النص في Claude", mS3p: "في Claude: الإعدادات ← المطوّر ← تعديل الإعدادات. يُفتح ملف: الصق فيه هذا النص ثم احفظ.",
+  mCopyCfg: "نسخ النص", mS3n: "إذا كان الملف يحتوي على شيء من قبل، لا تحذفه: تواصل معي وسأساعدك.",
+  mS4: "أعد تشغيل Claude", mS4p: "أغلق Claude تماماً ثم افتحه من جديد. يظهر «e-calculator» في أدواته.",
+  mS5: "اطرح سؤالك", mS5p: "اكتب أرقامك بشكل عادي، مثلاً:",
+  mAsk1: "أبيع ساعة بـ 59 د.ت وتكلّفني 22 د.ت. هذا الأسبوع: 100 طلبية، 65 مؤكّدة، 52 مُسلَّمة، 60$ إشهار، التوصيل 7 د.ت، الإرجاع 7 د.ت. كم أربح؟",
+  mAsk2: "تحت أي نسبة تسليم أبدأ في الخسارة؟", mAsk3: "هذه أرقامي لكل يوم من الأسبوع: أعطني حصيلة الشهر.",
+  mCopyAsk: "نسخ المثال", mHelp: "واجهتك مشكلة أو تريد أن تعرف ماذا يمكن أن يفعل الذكاء الاصطناعي لمتجرك؟ راسلني.", mHelpBtn: "تواصل معي",
+  mHelpMsg: "سلام، أحتاج مساعدة لاستعمال E-Calculator مع الذكاء الاصطناعي (MCP).",
   chip1: "✓ مجاني", chip2: "✓ يعمل بدون إنترنت", chip3: "✓ متابعة يومية",
   gTitle: "مرحباً بك في E-Calculator", gText: "الحاسبة مجانية. عرّف بنفسك في 10 ثوانٍ ثم ابدأ.",
   gName: "اسمك ولقبك", gShop: "اسم متجرك (صفحة فيسبوك أو إنستغرام)", gPhone: "رقم هاتفك",
@@ -1388,12 +1493,39 @@ $("gateForm").addEventListener("submit", (ev) => {
 });
 addEventListener("online", profileSend);
 
+
+// ---------------- light / dark switch (follows the phone until the visitor chooses)
+const sysDark = matchMedia("(prefers-color-scheme: dark)");
+function applyTheme() {
+  const forced = LS.get("ecalc-theme", null);
+  if (forced === "light" || forced === "dark") document.documentElement.dataset.theme = forced; else delete document.documentElement.dataset.theme;
+  const dark = forced ? forced === "dark" : sysDark.matches, label = t(dark ? "themeLight" : "themeDark");
+  $("themeBtn").textContent = dark ? "☀️" : "🌙"; $("themeBtn").setAttribute("aria-label", label); $("themeBtn").title = label;
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", dark ? "#0b1426" : "#1d4ed8");
+}
+$("themeBtn").onclick = () => { const dark = document.documentElement.dataset.theme ? document.documentElement.dataset.theme === "dark" : sysDark.matches; LS.set("ecalc-theme", dark ? "light" : "dark"); applyTheme(); };
+sysDark.addEventListener?.("change", applyTheme);
+
+// ---------------- AI (MCP) guide
+async function copyBtn(btn, text, key) {
+  try { await navigator.clipboard.writeText(text); btn.textContent = t("copiedOk"); } catch (e) { btn.textContent = t("copyFail"); }
+  setTimeout(() => (btn.textContent = t(key)), 2000);
+}
+$("mcpCopyCfg").onclick = () => copyBtn($("mcpCopyCfg"), $("mcpCfg").textContent, "mCopyCfg");
+$("mcpCopyAsk").onclick = () => copyBtn($("mcpCopyAsk"), t("mAsk1"), "mCopyAsk");
+function updateMcpHelp() {   // the help button uses the WhatsApp number or Instagram link from CONFIG
+  const wa = CONFIG.whatsapp ? `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(t("mHelpMsg"))}` : "", link = wa || CONFIG.instagram;
+  $("mcpHelp").hidden = !link; if (link) $("mcpHelpBtn").href = link;
+}
+
 // ---------------- language
 function applyLang() {
   const rtl = LANG === "ar";
   document.querySelectorAll(".chart").forEach((s) => s.classList.toggle("ar", rtl));
   ["app", "bar", "gate"].forEach((id) => { $(id).setAttribute("dir", rtl ? "rtl" : "ltr"); $(id).setAttribute("lang", LANG); });
   document.querySelectorAll("[data-t]").forEach((e) => { const v = t(e.dataset.t); if (typeof v === "string") e.textContent = v; });
+  document.querySelectorAll("[data-th]").forEach((e) => { e.innerHTML = t(e.dataset.th); });   // our own texts with links
+  applyTheme(); updateMcpHelp();
   $("who").placeholder = t("cPh");
   document.querySelectorAll("[data-lang]").forEach((b) => b.classList.toggle("on", b.dataset.lang === LANG));
   if ($("dataDir").dataset.dir) $("dataDir").textContent = t("pDir")($("dataDir").dataset.dir);
