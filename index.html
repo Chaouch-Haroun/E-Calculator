@@ -162,6 +162,7 @@ footer { color: var(--muted); font-size: 12px; }
 #gate .tel input { border: 0; border-radius: 0; background: transparent; font-family: var(--mono); letter-spacing: 1px; }
 #gate .consent { font-weight: 400; display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: var(--ink); }
 #gate .consent input { width: 22px; height: 22px; flex: none; margin-top: 1px; accent-color: var(--blue); }
+#gate .hp { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
 #gate .err { color: var(--bad); font-size: 13px; min-height: 1em; }
 #gate button[type=submit] { justify-content: center; min-height: 54px; font-size: 17px; }
 #gate small { color: var(--muted); font-size: 12px; }
@@ -332,6 +333,7 @@ a.btn.primary, button.btn.primary { background: linear-gradient(135deg, #4ade80,
     <label><span data-t="gName"></span><input type="text" id="gName" autocomplete="name" maxlength="60" required></label>
     <label><span data-t="gShop"></span><input type="text" id="gShop" autocomplete="organization" maxlength="80" required></label>
     <label><span data-t="gPhone"></span><span class="tel"><span>+216</span><input type="tel" id="gPhone" inputmode="numeric" autocomplete="tel-national" placeholder="20 123 456" required></span></label>
+    <div class="hp" aria-hidden="true"><label>Website <input type="text" id="gWeb" name="website" tabindex="-1" autocomplete="off"></label></div>
     <label class="consent"><input type="checkbox" id="gOk" required><span data-t="gConsent"></span></label>
     <div class="err" id="gErr" role="alert"></div>
     <button type="submit" class="btn primary" data-t="gGo"></button>
@@ -646,7 +648,7 @@ mHelp: "Tu bloques ou tu veux savoir ce que l'IA peut faire pour ta boutique? É
   gName: "Ton prénom et nom", gShop: "Nom de ta boutique (page Facebook ou Instagram)", gPhone: "Ton numéro de téléphone",
   gConsent: "J'accepte que mon nom, ma boutique et mon numéro soient envoyés à l'équipe E-Calculator, qui peut me contacter pour des conseils et des nouveautés.",
   gGo: "Commencer", gPrivacy: "Seuls ces 3 champs sont envoyés. Tes chiffres de vente restent sur ton téléphone.",
-  gErrName: "Écris ton nom.", gErrShop: "Écris le nom de ta boutique.", gErrPhone: "Le numéro doit avoir 8 chiffres.", gErrOk: "Coche la case pour continuer.",
+  gErrName: "Écris ton nom.", gErrShop: "Écris le nom de ta boutique.", gErrPhone: "Écris un numéro tunisien de 8 chiffres (ex: 20 123 456).", gErrOk: "Coche la case pour continuer.",
   pDir: (d) => `Tes produits sont enregistrés dans: ${d}`,
   pNew: "+ Nouveau", pName: "Nom du produit", pDefault: "Produit", pDup: "Dupliquer", pDel: "Supprimer", pExport: "Exporter", pImport: "Importer",
   pCopy: (n) => `${n} (copie)`, pDelQ: (n) => `Supprimer « ${n} » ?`, pHist: "Versions précédentes", pRestore: "Restaurer", pNoHist: "Aucune version pour l'instant.",
@@ -773,7 +775,7 @@ mHelp: "Stuck, or want to know what AI can do for your shop? Message us.", mHelp
   gName: "Your first and last name", gShop: "Your shop's name (Facebook or Instagram page)", gPhone: "Your phone number",
   gConsent: "I agree that my name, shop and number are sent to the E-Calculator team, who may contact me with tips and news.",
   gGo: "Start", gPrivacy: "Only these 3 fields are sent. Your sales numbers stay on your phone.",
-  gErrName: "Write your name.", gErrShop: "Write your shop's name.", gErrPhone: "The number must have 8 digits.", gErrOk: "Tick the box to continue.",
+  gErrName: "Write your name.", gErrShop: "Write your shop's name.", gErrPhone: "Enter an 8-digit Tunisian number (e.g. 20 123 456).", gErrOk: "Tick the box to continue.",
   pDir: (d) => `Your products are saved in: ${d}`,
   pNew: "+ New", pName: "Product name", pDefault: "Product", pDup: "Duplicate", pDel: "Delete", pExport: "Export", pImport: "Import",
   pCopy: (n) => `${n} (copy)`, pDelQ: (n) => `Delete "${n}"?`, pHist: "Previous versions", pRestore: "Restore", pNoHist: "No versions yet.",
@@ -900,7 +902,7 @@ mHelp: "واجهتك مشكلة أو تريد أن تعرف ماذا يمكن أ
   gName: "اسمك ولقبك", gShop: "اسم متجرك (صفحة فيسبوك أو إنستغرام)", gPhone: "رقم هاتفك",
   gConsent: "أوافق على إرسال اسمي واسم متجري ورقمي إلى فريق E-Calculator، ويمكنه التواصل معي لتقديم نصائح ومستجدات.",
   gGo: "ابدأ", gPrivacy: "تُرسل هذه الخانات الثلاث فقط. أرقام مبيعاتك تبقى على هاتفك.",
-  gErrName: "اكتب اسمك.", gErrShop: "اكتب اسم متجرك.", gErrPhone: "يجب أن يتكون الرقم من 8 أرقام.", gErrOk: "ضع علامة في الخانة للمتابعة.",
+  gErrName: "اكتب اسمك.", gErrShop: "اكتب اسم متجرك.", gErrPhone: "اكتب رقماً تونسياً من 8 أرقام (مثال: 20 123 456).", gErrOk: "ضع علامة في الخانة للمتابعة.",
   pDir: (d) => `منتجاتك محفوظة في: ${d}`,
   pNew: "+ جديد", pName: "اسم المنتج", pDefault: "منتج", pDup: "نسخ", pDel: "حذف", pExport: "تصدير", pImport: "استيراد",
   pCopy: (n) => `${n} (نسخة)`, pDelQ: (n) => `حذف «${n}»؟`, pHist: "النسخ السابقة", pRestore: "استرجاع", pNoHist: "لا توجد نسخ بعد.",
@@ -1517,7 +1519,7 @@ function askPersist() { if (persistAsked) return; persistAsked = true; try { nav
 // ---------------- welcome screen: name, shop and phone, sent once to the Google Form in CONFIG.form
 function profileSend() {
   const pr = LS.get("ecalc-profile", null), f = CONFIG.form;
-  if (!pr || pr.sent || !f.action || !f.name) return;     // kept on the device until a form is configured
+  if (!pr || pr.sent || pr.bot || !f.action || !f.name) return;     // kept on the device until a form is configured; suspected bots are never sent
   const body = new URLSearchParams({ [f.name]: pr.name, [f.shop]: pr.shop, [f.phone]: "+216 " + pr.phone });
   fetch(f.action, { method: "POST", mode: "no-cors", body })
     .then(() => LS.set("ecalc-profile", { ...pr, sent: Date.now() }))
@@ -1529,12 +1531,25 @@ function showGate() {
   if (pr) profileSend();
 }
 $("gPhone").addEventListener("input", () => { let d = $("gPhone").value.replace(/\D/g, ""); if (d.startsWith("00216")) d = d.slice(5); else if (d.startsWith("216") && d.length > 8) d = d.slice(3); d = d.slice(0, 8); $("gPhone").value = d.replace(/^(\d{2})(\d{0,3})(\d{0,3}).*/, (m, a, b, c) => [a, b, c].filter(Boolean).join(" ")); });
+// spam protection: a real person types (trusted key events), takes a few seconds, leaves the hidden field empty and writes real words
+const gateOpened = Date.now(); let typed = 0;
+["gName", "gShop", "gPhone"].forEach((id) => $(id).addEventListener("input", (e) => { if (e.isTrusted) typed++; }));
+const LOREM = /\b(lorem|ipsum|dolor|amet|consectetur|adipisci\w*|sapiente|voluptat\w*|molestia\w*|earum|rerum|quod|natus|nulla|quia|eius|aut|enim|dolore\w*|ullam\w*|eveniet|repellat|officia\w*)\b/gi;
+function looksFake(name, shop) {
+  if ($("gWeb").value) return true;                                  // hidden field filled
+  if (Date.now() - gateOpened < 2500 || typed < 3) return true;       // too fast, or nothing typed by a person
+  if (((name + " " + shop).match(LOREM) || []).length >= 2) return true;   // placeholder Latin
+  if (/(https?:|www\.|@.*\.)/i.test(name + shop)) return true;          // links
+  return false;
+}
 $("gateForm").addEventListener("submit", (ev) => {
   ev.preventDefault();
-  const name = $("gName").value.trim(), shop = $("gShop").value.trim(), phone = $("gPhone").value.replace(/\D/g, "");
-  const err = name.length < 2 ? ["gName", "gErrName"] : shop.length < 2 ? ["gShop", "gErrShop"] : phone.length !== 8 ? ["gPhone", "gErrPhone"] : !$("gOk").checked ? ["gOk", "gErrOk"] : null;
+  const name = $("gName").value.trim().replace(/\s+/g, " "), shop = $("gShop").value.trim().replace(/\s+/g, " "), phone = $("gPhone").value.replace(/\D/g, "");
+  const okName = name.length >= 2 && name.length <= 50 && /\p{L}/u.test(name), okShop = shop.length >= 2 && shop.length <= 60;
+  const err = !okName ? ["gName", "gErrName"] : !okShop ? ["gShop", "gErrShop"] : !/^[2-9]\d{7}$/.test(phone) ? ["gPhone", "gErrPhone"] : !$("gOk").checked ? ["gOk", "gErrOk"] : null;
   if (err) { $("gErr").textContent = t(err[1]); $(err[0]).focus(); return; }
-  LS.set("ecalc-profile", { name, shop, phone, at: Date.now(), lang: LANG });
+  const bot = looksFake(name, shop);                                  // the page opens normally, but nothing is sent
+  LS.set("ecalc-profile", { name, shop, phone, at: Date.now(), lang: LANG, ...(bot ? { bot: true } : {}) });
   $("gErr").textContent = ""; showGate(); window.scrollTo(0, 0);
 });
 addEventListener("online", profileSend);
