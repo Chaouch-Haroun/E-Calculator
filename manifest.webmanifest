@@ -1,6 +1,6 @@
 {
- "name": "Rbe7 – calculateur e-commerce",
- "short_name": "Rbe7",
+ "name": "E-Calculator – calculateur e-commerce",
+ "short_name": "E-Calculator",
  "description": "Bénéfice réel, pub, retours, suivi jour par jour.",
  "start_url": "./",
  "scope": "./",

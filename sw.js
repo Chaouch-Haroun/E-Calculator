@@ -1,6 +1,6 @@
-// Rbe7: keeps a copy of the page on the device so it opens without internet.
+// E-Calculator: keeps a copy of the page on the device so it opens without internet.
 // The seller's numbers are not cached here: the page keeps them in the browser storage.
-const CACHE = "rbe7-v2";
+const CACHE = "ecalc-v2";
 const CORE = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 self.addEventListener("install", (e) => { e.waitUntil(caches.open(CACHE).then((c) => c.addAll(CORE).catch(() => {}))); self.skipWaiting(); });
 self.addEventListener("activate", (e) => { e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k))))); self.clients.claim(); });
